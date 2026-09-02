@@ -1,3 +1,3 @@
-LIFE v20.1 — Zero Balance Fix
+LIFE v20.2 — Legacy Accounts Zero
 
-One-time reset of the old balance. Dashboard balance is now based only on accounts created by the user. Crypto, Push, reminders, debts and savings are preserved.
+Resets legacy Картка / Готівка / Спільний рахунок values to 0 once. The dashboard balance remains driven by the new user-created accounts. Crypto, Push, reminders, debts and savings are preserved.
