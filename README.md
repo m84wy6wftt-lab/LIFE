@@ -1,2 +1,3 @@
-LIFE v19 — Personal Finance
-Real crypto • multi-currency debts/fines • payments • savings goals • background Push preserved.
+LIFE v19.1 — Clean Start
+
+One-time removal of the three legacy debt entries. Reminders, Push, transactions, settings and real crypto portfolio are preserved.

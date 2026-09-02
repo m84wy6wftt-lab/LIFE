@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- LIFE v19 Personal Finance -->
+<!-- LIFE v19.1 Personal Finance — clean debts -->
 <html lang="uk">
 <head>
 <meta charset="utf-8">
@@ -255,6 +255,14 @@ const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categori
 let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
 if(!localStorage.getItem('LIFE_V19_MIGRATED')){if((data.debts||[]).length===1&&data.debts[0].n==='Кредитна картка'&&+data.debts[0].a===50000)data.debts=[];data.savings={current:0,goal:0};data.savingGoals=[];data.coins={ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}};localStorage.setItem('LIFE_V19_MIGRATED','1');localStorage.setItem(KEY,JSON.stringify(data));}
 data.savingGoals=data.savingGoals||[];
+// LIFE v19.1: one-time clean start for the legacy debt list requested by the user.
+if(!localStorage.getItem('LIFE_V19_1_DEBTS_CLEAN')){
+  const legacyNames=new Set(['Кредитна картка','Мамі за авто','Подруга мами Ушкани']);
+  const legacyAmounts=new Set([50000,132000,44000]);
+  data.debts=(data.debts||[]).filter(d=>!(legacyNames.has(d.n)&&legacyAmounts.has(+(d.original||d.a||0))));
+  localStorage.setItem('LIFE_V19_1_DEBTS_CLEAN','1');
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
 
 const coinList=['ETH','SOL','XRP','BTC','TAO','LINK','ENA','AAVE','ICP','AVAX','BNB','ADA'];
 function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
