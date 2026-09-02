@@ -46,7 +46,15 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 <div class="title">Привіт, Влад 👋</div><div class="muted">Ось що відбувається сьогодні</div>
 <div class="card"><div class="muted">Загальний баланс</div><div class="big" id="homeBalance">0 ₴</div><div class="badge" id="homeNet">0 ₴ цього місяця</div></div>
 <div class="grid"><div class="card"><div class="muted">Витрати</div><b id="homeExpense">0 ₴</b></div><div class="card"><div class="muted">Крипто</div><b id="cryptoTotal">$0</b><div class="accent">портфель</div></div></div>
-<div class="card"><b>Швидкі дії</b><div class="quick" style="margin-top:12px"><button class="btn2" onclick="openFinance('expense')">− Витрата</button><button class="btn2" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="showPage('shopping')">🛒 Покупка</button><button class="btn2" onclick="showPage('plans')">✓ Задача</button></div></div><div class="card"><div style="display:flex;justify-content:space-between"><b>Спільний простір</b><span class="badge">Влад + Ніка</span></div><div class="muted" style="margin-top:7px">Покупки, задачі та спільні фінанси підготовлені до синхронізації між двома телефонами.</div></div>
+<div class="card"><b>Швидкі дії</b><div class="quick" style="margin-top:12px"><button class="btn2" onclick="openFinance('expense')">− Витрата</button><button class="btn2" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="showPage('shopping')">🛒 Покупка</button><button class="btn2" onclick="showPage('plans')">✓ Задача</button></div></div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div><b>Нагадування</b><div class="muted">Push на iPhone</div></div>
+    <button class="btn2" onclick="openReminder()">＋ Додати</button>
+  </div>
+  <div id="reminderPreview" style="margin-top:8px"></div>
+</div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Спільний простір</b><span class="badge">Влад + Ніка</span></div><div class="muted" style="margin-top:7px">Покупки, задачі та спільні фінанси підготовлені до синхронізації між двома телефонами.</div></div>
 <div class="card"><div style="display:flex;justify-content:space-between"><b>Накопичення</b><span id="savingText">0 ₴ / 0 ₴</span></div><div class="progress" style="margin-top:10px"><i id="savingProgress" style="width:0%"></i></div></div>
 </section>
 
@@ -81,7 +89,21 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 
 <section id="assets" class="page">
 <div class="title">Активи</div><div class="muted">Криптопортфель та накопичення</div>
-<div class="card"><div class="muted">Вартість портфеля</div><div class="big" id="assetTotal">$0</div><div class="muted">Ручний тестовий режим</div></div>
+
+<div class="card">
+  <div class="muted">Вартість портфеля</div>
+  <div class="big" id="assetTotal">$0</div>
+  <div class="muted" id="marketUpdated">Курси ще не оновлено</div>
+</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b>Курси валют</b><button class="btn2" onclick="refreshMarkets()">↻ Оновити</button>
+  </div>
+  <div class="row"><span>USD / UAH</span><b id="usdUah">—</b></div>
+  <div class="row"><span>EUR / UAH</span><b id="eurUah">—</b></div>
+  <div class="row"><span>EUR / USD</span><b id="eurUsd">—</b></div>
+</div>
+
 <div class="card"><b>Монети</b><div id="coins"></div><button class="btn2" style="width:100%;margin-top:8px" onclick="openCoin()">＋ Додати / змінити</button></div>
 <div class="card"><b>Накопичення</b><input id="saveCurrent" type="number" placeholder="Накопичено"><input id="saveGoal" type="number" placeholder="Ціль"><button class="btn" style="width:100%" onclick="saveSavings()">Зберегти</button></div>
 </section>
@@ -93,6 +115,20 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 <div id="financeModal" class="modal"><div class="sheet"><h2 id="fmTitle">Операція</h2><select id="ftype"><option value="expense">Витрата</option><option value="income">Дохід</option></select><input id="famount" type="number" placeholder="Сума"><select id="faccount"><option>Картка</option><option>Готівка</option><option>Спільний рахунок</option></select><select id="fowner"><option>Влад</option><option>Ніка</option><option>Спільне</option></select><select id="fcat"></select><input id="fnote" placeholder="Коментар"><button class="btn" style="width:100%" onclick="saveFinance()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="debtModal" class="modal"><div class="sheet"><h2>Новий борг</h2><input id="debtName" placeholder="Назва"><input id="debtAmount" type="number" placeholder="Сума"><button class="btn" style="width:100%" onclick="saveDebt()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="coinModal" class="modal"><div class="sheet"><h2>Актив</h2><select id="coinName"></select><input id="coinQty" type="number" step="any" placeholder="Кількість"><input id="coinPrice" type="number" step="any" placeholder="Ціна $"><button class="btn" style="width:100%" onclick="saveCoin()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+
+<div id="reminderModal" class="modal"><div class="sheet">
+<h2>Нагадування</h2>
+<input id="reminderText" placeholder="Що нагадати?">
+<select id="reminderMode" onchange="reminderModeChanged()">
+  <option value="time">У вибраний час</option>
+  <option value="hourly">Щогодини</option>
+</select>
+<input id="reminderTime" type="time" value="09:00">
+<button class="btn" style="width:100%" onclick="saveReminder()">Зберегти</button>
+<button class="btn2" style="width:100%;margin-top:8px" onclick="requestPushPermission()">Увімкнути сповіщення</button>
+<div class="muted" id="pushState" style="margin-top:10px"></div>
+<button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
+</div></div>
 <div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування</h2><input id="nameInput" placeholder="Твоє ім'я"><input id="partnerInput" placeholder="Партнер"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
 <div class="card"><b>Категорії та ліміти</b><div class="muted" style="margin:5px 0 10px">Ліміт — максимальна сума витрат на місяць.</div><div id="categorySettings"></div>
 <div style="display:flex;gap:8px;margin-top:10px"><input id="newCategoryName" placeholder="Нова категорія"><input id="newCategoryLimit" type="number" placeholder="Ліміт" style="max-width:110px"><button class="btn" onclick="addCategory()">＋</button></div>
@@ -108,8 +144,8 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 </div><button class="btn" style="width:100%" onclick="saveSettings()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button></div></div>
 
 <script>
-const KEY='LIFE_V8';
-const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':42680,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[{n:'Кредитна картка',a:50000}],savings:{current:86200,goal:139000},coins:{TAO:{q:1,p:1420},BNB:{q:1,p:920},LINK:{q:1,p:610},AVAX:{q:1,p:410},ICP:{q:1,p:318},AAVE:{q:0,p:0},ENA:{q:0,p:0},TRUMP:{q:0,p:0},DEXE:{q:0,p:0},APT:{q:0,p:0},ADA:{q:0,p:0},USDT:{q:0,p:1}}};
+const KEY='LIFE_V9';
+const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':42680,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[{n:'Кредитна картка',a:50000}],savings:{current:86200,goal:139000},reminders:[],fx:{usd:0,eur:0,updated:null},coins:{TAO:{q:1,p:1420},BNB:{q:1,p:920},LINK:{q:1,p:610},AVAX:{q:1,p:410},ICP:{q:1,p:318},AAVE:{q:0,p:0},ENA:{q:0,p:0},TRUMP:{q:0,p:0},DEXE:{q:0,p:0},APT:{q:0,p:0},ADA:{q:0,p:0},USDT:{q:0,p:1}}};
 let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
 
 const coinList=['ADA','BNB','USDT','TAO','LINK','AVAX','ICP','AAVE','ENA','TRUMP','DEXE','APT'];
@@ -138,6 +174,69 @@ function renderCategorySettings(){
 function addCategory(){const n=newCategoryName.value.trim();if(!n)return;data.categories[n]=+newCategoryLimit.value||0;newCategoryName.value='';newCategoryLimit.value='';refreshCategorySelect();renderCategorySettings();persist()}
 function editCategory(old){const nn=prompt('Назва категорії',old);if(!nn)return;const lim=+prompt('Місячний ліміт, ₴',data.categories[old]||0)||0;if(nn!==old){data.categories[nn]=lim;delete data.categories[old];data.tx.forEach(t=>{if(t.cat===old)t.cat=nn})}else data.categories[old]=lim;refreshCategorySelect();renderCategorySettings();persist()}
 
+
+function openReminder(){
+  reminderText.value=''; reminderMode.value='time'; reminderTime.value='09:00';
+  reminderModeChanged(); updatePushState(); reminderModal.classList.add('on');
+}
+function reminderModeChanged(){reminderTime.style.display=reminderMode.value==='time'?'block':'none'}
+function saveReminder(){
+  const t=reminderText.value.trim(); if(!t)return alert('Вкажи текст нагадування');
+  data.reminders=data.reminders||[];
+  data.reminders.push({id:Date.now(),text:t,mode:reminderMode.value,time:reminderTime.value||'09:00',enabled:true,lastFire:null});
+  closeAll();persist();scheduleLocalChecks();
+}
+function removeReminder(id){data.reminders=(data.reminders||[]).filter(x=>x.id!==id);persist()}
+async function requestPushPermission(){
+  if(!('Notification' in window)){pushState.textContent='Цей браузер не підтримує Notifications API';return}
+  try{
+    const p=await Notification.requestPermission();updatePushState();
+    if(p==='granted') new Notification('LIFE',{body:'Сповіщення увімкнено ✅'});
+  }catch(e){pushState.textContent='Не вдалося запросити дозвіл'}
+}
+function updatePushState(){
+  if(!('Notification' in window)){pushState.textContent='Notifications API недоступний';return}
+  const p=Notification.permission;
+  pushState.textContent=p==='granted'?'Дозвіл на сповіщення: увімкнено ✅':p==='denied'?'Сповіщення заборонені в налаштуваннях iPhone':'Потрібно дозволити сповіщення';
+}
+function fireLocalReminder(r){
+  if(Notification.permission==='granted'){
+    try{new Notification('LIFE',{body:r.text,icon:'./icon.svg'})}catch(e){}
+  }
+}
+function scheduleLocalChecks(){
+  if(window.__lifeReminderTimer)clearInterval(window.__lifeReminderTimer);
+  window.__lifeReminderTimer=setInterval(()=>{
+    const now=new Date(), hh=String(now.getHours()).padStart(2,'0'), mm=String(now.getMinutes()).padStart(2,'0'), key=now.toISOString().slice(0,13)+':'+mm;
+    (data.reminders||[]).filter(r=>r.enabled).forEach(r=>{
+      let due=false;
+      if(r.mode==='time' && r.time===hh+':'+mm) due=true;
+      if(r.mode==='hourly' && mm==='00') due=true;
+      if(due && r.lastFire!==key){r.lastFire=key;fireLocalReminder(r);localStorage.setItem(KEY,JSON.stringify(data))}
+    });
+  },15000);
+}
+async function refreshMarkets(){
+  const symbols=['ADAUSDT','BNBUSDT','TAOUSDT','LINKUSDT','AVAXUSDT','ICPUSDT','AAVEUSDT','ENAUSDT','TRUMPUSDT','DEXEUSDT','APTUSDT'];
+  try{
+    const q=encodeURIComponent(JSON.stringify(symbols));
+    const r=await fetch('https://api.binance.com/api/v3/ticker/price?symbols='+q,{cache:'no-store'});
+    if(!r.ok)throw new Error('Binance '+r.status);
+    const arr=await r.json();
+    for(const x of arr){
+      const c=x.symbol.replace('USDT','');
+      if(data.coins[c])data.coins[c].p=+x.price;
+    }
+  }catch(e){console.warn('Binance update failed',e)}
+  try{
+    const r=await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json',{cache:'no-store'});
+    if(!r.ok)throw new Error('NBU '+r.status);
+    const arr=await r.json();
+    const usd=arr.find(x=>x.cc==='USD'), eur=arr.find(x=>x.cc==='EUR');
+    if(usd&&eur)data.fx={usd:+usd.rate,eur:+eur.rate,updated:new Date().toISOString()};
+  }catch(e){console.warn('NBU update failed',e)}
+  render();localStorage.setItem(KEY,JSON.stringify(data));
+}
 function exportLife(){
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='LIFE-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
@@ -165,11 +264,20 @@ function render(){
  const vals=Object.entries(data.coins).map(([n,v])=>[n,v.q*v.p,v]); const total=vals.reduce((s,x)=>s+x[1],0); assetTotal.textContent=cryptoTotal.textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:2});
  coins.innerHTML=vals.map(([n,val,v])=>`<div class="row"><div><b>${n}</b><div class="muted">${v.q} × $${v.p}</div></div><b>$${val.toLocaleString('en-US',{maximumFractionDigits:2})}</b></div>`).join('');
  saveCurrent.value=data.savings.current;saveGoal.value=data.savings.goal; savingText.textContent=money(data.savings.current)+' / '+money(data.savings.goal); savingProgress.style.width=Math.min(100,data.savings.goal?data.savings.current/data.savings.goal*100:0)+'%';
- document.querySelector('#home .title').textContent='Привіт, '+data.profile.name+' 👋';
+ 
+ const rs=(data.reminders||[]).filter(x=>x.enabled);
+ reminderPreview.innerHTML=rs.length?rs.slice(0,4).map(r=>`<div class="row"><div><b>${r.text}</b><div class="muted">${r.mode==='hourly'?'Щогодини':r.time}</div></div><span class="danger" onclick="removeReminder(${r.id})">×</span></div>`).join(''):'<div class="muted">Нагадувань ще немає</div>';
+ if(data.fx){
+   usdUah.textContent=data.fx.usd?data.fx.usd.toFixed(4)+' ₴':'—';
+   eurUah.textContent=data.fx.eur?data.fx.eur.toFixed(4)+' ₴':'—';
+   eurUsd.textContent=(data.fx.usd&&data.fx.eur)?(data.fx.eur/data.fx.usd).toFixed(4):'—';
+   marketUpdated.textContent=data.fx.updated?'Оновлено '+new Date(data.fx.updated).toLocaleString('uk-UA'):'Курси ще не оновлено';
+ }
+document.querySelector('#home .title').textContent='Привіт, '+data.profile.name+' 👋';
 }
 refreshCategorySelect(); coinName.innerHTML=coinList.map(x=>`<option>${x}</option>`).join('');
 if(/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) installBox.classList.add('show');
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-render();
+render();scheduleLocalChecks();refreshMarkets();setInterval(refreshMarkets,60000);
 </script>
 </body></html>

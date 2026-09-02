@@ -1,9 +1,9 @@
 {
-  "name": "LIFE v8 — Влад + Ніка",
+  "name": "LIFE v9 — Влад + Ніка",
   "short_name": "LIFE",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#090b0e",
   "theme_color": "#090b0e",
-  "description": "Особистий і спільний LIFE: фінанси, покупки, плани, накопичення та активи."
+  "description": "LIFE: фінанси, покупки, плани, нагадування, валюти та криптоактиви."
 }
