@@ -1,9 +1,7 @@
-LIFE v29 Bug Fix + Smart Finance. Upload all 7 unpacked files to the LIFE GitHub repository. Existing LIFE_V10 data is preserved.
+LIFE v31 — AI Actions
 
+GitHub: upload all 7 files from this archive to the LIFE repository root and commit to main.
+Cloudflare: replace the current life-push-server Worker code with LIFE-v31-worker.js from the separate file provided in ChatGPT, then Deploy. Keep existing secrets OPENAI_API_KEY and ONESIGNAL_API_KEY unchanged.
 
-LIFE v30 Finance: smart recurring payments, transaction filters, split debts, savings progress, monthly analytics.
-
-LIFE v30.1: category budgets can now be added, edited, and removed directly from Finance.
-
-
-LIFE v30.2: account management/delete, swipe-to-delete shopping/tasks, category fuel migration, crypto buy/sell ledger with weighted average cost.
+Preserved: LIFE_V10, OneSignal Push, voice transcription, finance, shopping, plans, crypto, local data.
+New AI actions: shopping, plans, crypto buy/sell ledger, recurring payment matching, savings with account balance movement, mixed batch commands.
