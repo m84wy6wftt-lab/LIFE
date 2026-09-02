@@ -1,3 +1,2 @@
-LIFE v17 — Background Scheduled Push
-
-True scheduled OneSignal push reminders through LIFE Push Server. Existing LIFE_V10 data preserved.
+LIFE v19 — Personal Finance
+Real crypto • multi-currency debts/fines • payments • savings goals • background Push preserved.
