@@ -394,6 +394,7 @@ function deleteCategory(n){if(!confirm('Видалити категорію «'+
 
 
 const LIFE_AI_SERVER='https://life-push-server.m84wy6wftt.workers.dev/ai';
+const LIFE_TRANSCRIBE_SERVER='https://life-push-server.m84wy6wftt.workers.dev/transcribe';
 let pendingAI=null;
 function aiEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function lifeAIContext(){
@@ -404,16 +405,38 @@ function lifeAIContext(){
 }
 function openAI(){aiInput.value='';aiStatus.textContent='';clearAIResult();aiModal.classList.add('on');setTimeout(()=>aiInput.focus(),250)}
 function clearAIResult(){pendingAI=null;aiResult.classList.remove('show');aiFields.innerHTML='';aiSummary.textContent=''}
-let voiceRecognition=null,voiceListening=false;
-function toggleVoice(){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){aiStatus.textContent='На цьому iPhone голосове розпізнавання в браузері недоступне. Можна використати диктування клавіатури.';return}
- if(voiceListening&&voiceRecognition){voiceRecognition.stop();return}
- voiceRecognition=new SR();voiceRecognition.lang='uk-UA';voiceRecognition.interimResults=false;voiceRecognition.continuous=false;
- voiceRecognition.onstart=()=>{voiceListening=true;aiMicBtn.classList.add('listening');aiMicBtn.textContent='⏹';aiStatus.textContent='Слухаю…'};
- voiceRecognition.onresult=e=>{const t=e.results?.[0]?.[0]?.transcript||'';if(t){aiInput.value=(aiInput.value.trim()?aiInput.value.trim()+' ':'')+t;aiStatus.textContent='Готово. Перевір текст і надішли AI.'}};
- voiceRecognition.onerror=e=>{aiStatus.textContent='Не вдалося розпізнати голос: '+(e.error||'помилка')};
- voiceRecognition.onend=()=>{voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️'};voiceRecognition.start();
+let voiceRecorder=null,voiceStream=null,voiceChunks=[],voiceListening=false;
+function bestVoiceMime(){
+ const types=['audio/mp4','audio/webm;codecs=opus','audio/webm'];
+ return types.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+}
+async function stopVoiceTracks(){
+ try{(voiceStream?.getTracks?.()||[]).forEach(t=>t.stop())}catch(e){}
+ voiceStream=null;
+}
+async function toggleVoice(){
+ if(voiceListening&&voiceRecorder){try{voiceRecorder.stop()}catch(e){}return}
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){aiStatus.textContent='Запис голосу не підтримується цим браузером.';return}
+ try{
+  aiStatus.textContent='Запитую доступ до мікрофона…';
+  voiceStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+  voiceChunks=[];const mime=bestVoiceMime();voiceRecorder=mime?new MediaRecorder(voiceStream,{mimeType:mime}):new MediaRecorder(voiceStream);
+  voiceRecorder.ondataavailable=e=>{if(e.data&&e.data.size)voiceChunks.push(e.data)};
+  voiceRecorder.onstart=()=>{voiceListening=true;aiMicBtn.classList.add('listening');aiMicBtn.textContent='⏹';aiStatus.textContent='Слухаю… Натисни ⏹, коли закінчиш.'};
+  voiceRecorder.onerror=async()=>{voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️';aiStatus.textContent='Не вдалося записати голос.';await stopVoiceTracks()};
+  voiceRecorder.onstop=async()=>{
+   voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️';await stopVoiceTracks();
+   if(!voiceChunks.length){aiStatus.textContent='Голос не записався. Спробуй ще раз.';return}
+   aiStatus.textContent='Розпізнаю голос…';aiMicBtn.disabled=true;
+   try{
+    const type=voiceRecorder.mimeType||mime||'audio/mp4';const ext=type.includes('mp4')?'m4a':type.includes('webm')?'webm':'audio';
+    const blob=new Blob(voiceChunks,{type});const fd=new FormData();fd.append('file',blob,'life-voice.'+ext);fd.append('language','uk');
+    const r=await fetch(LIFE_TRANSCRIBE_SERVER,{method:'POST',body:fd});const out=await r.json();if(!r.ok||!out.ok)throw new Error(out.error||('HTTP '+r.status));
+    const t=String(out.text||'').trim();if(!t)throw new Error('Не вдалося розпізнати слова');aiInput.value=(aiInput.value.trim()?aiInput.value.trim()+' ':'')+t;aiStatus.textContent='Готово. Перевір текст і надішли AI.';
+   }catch(e){console.error('Voice transcription error',e);aiStatus.textContent='Помилка голосу: '+String(e.message||e).slice(0,160)}finally{aiMicBtn.disabled=false;voiceChunks=[];voiceRecorder=null}
+  };
+  voiceRecorder.start();
+ }catch(e){await stopVoiceTracks();voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️';aiStatus.textContent=(e?.name==='NotAllowedError')?'Дозволь LIFE доступ до мікрофона в Safari.':'Не вдалося увімкнути мікрофон: '+String(e.message||e)}
 }
 function parseMoneyText(m){const x=m.match(/(\d[\d \u00a0]*(?:[.,]\d+)?)\s*(грн|грив|uah|дол|usd|\$|євро|eur|€)/i);if(!x)return null;const amount=parseFloat(x[1].replace(/[ \u00a0]/g,'').replace(',','.'));const z=x[2].toLowerCase();return {amount,currency:(z.includes('дол')||z==='usd'||z==='$')?'USD':(z.includes('євро')||z==='eur'||z==='€')?'EUR':'UAH'}}
 function localLoanProposal(message){

@@ -1,3 +1,1 @@
-LIFE v24 AI Finance + Voice. 7 files. Preserve LIFE_V10.
-
-Legal services categories added.
+LIFE v25 AI Voice — iPhone audio recording + protected OpenAI transcription via Cloudflare Worker.

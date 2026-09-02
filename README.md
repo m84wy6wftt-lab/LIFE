@@ -1,5 +1,3 @@
-# LIFE v24 AI Finance + Voice
+# LIFE v25 AI Voice
 
-Категорії/підкатегорії, редагування/приховування/видалення, позичені кошти та «Мені винні», голосове введення LIFE AI. Збережено ключ LIFE_V10, Push та AI backend.
-
-- Added legal services categories: lawyer, consultation, court fees, notary, documents, enforcement, other legal.
+Голос LIFE AI тепер записується через мікрофон iPhone і надсилається на захищений Cloudflare Worker для транскрипції OpenAI. Ключі не зберігаються в GitHub або LIFE. Збережено LIFE_V10, фінанси, категорії, юридичні послуги, Push та AI.
