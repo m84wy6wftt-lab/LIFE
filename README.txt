@@ -1,1 +1,3 @@
-LIFE v23 AI — upload all 7 files to the root of the GitHub LIFE repository.
+LIFE v24 AI Finance + Voice. 7 files. Preserve LIFE_V10.
+
+Legal services categories added.

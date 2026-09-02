@@ -82,6 +82,7 @@ textarea{width:100%;min-height:108px;resize:none;padding:12px;border-radius:13px
 .ai-result{display:none;background:#171a1f;border:1px solid #30363e;border-radius:15px;padding:12px;margin:10px 0}.ai-result.show{display:block}
 .ai-result .ai-summary{font-weight:800;margin-bottom:8px}.ai-result select{margin-top:7px}
 .ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.ai-input-row{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:stretch}.ai-input-row textarea{margin:0}.ai-mic{font-size:22px;min-height:54px}.ai-mic.listening{box-shadow:0 0 0 2px var(--accent) inset}
 </style>
 </style>
 
@@ -248,7 +249,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="aiModal" class="modal"><div class="sheet">
 <h2>✦ LIFE AI</h2>
 <div class="muted" style="margin-bottom:8px">Наприклад: «Витратив 850 грн на бензин» або «Скільки залишилось боргів?»</div>
-<textarea id="aiInput" placeholder="Напиши, що зробити…"></textarea>
+<div class="ai-input-row"><textarea id="aiInput" placeholder="Напиши або скажи, що зробити…"></textarea><button id="aiMicBtn" class="btn2 ai-mic" onclick="toggleVoice()" aria-label="Голосове введення">🎙️</button></div>
 <button id="aiSendBtn" class="btn" style="width:100%" onclick="sendAI()">Надіслати AI</button>
 <div id="aiStatus" class="ai-status"></div>
 <div id="aiResult" class="ai-result"><div id="aiSummary" class="ai-summary"></div><div id="aiFields"></div><div class="ai-actions"><button id="aiConfirmBtn" class="btn" onclick="confirmAI()">Підтвердити</button><button class="btn2" onclick="clearAIResult()">Скасувати</button></div></div>
@@ -268,7 +269,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
 </div></div>
 <div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування</h2><input id="nameInput" placeholder="Твоє ім'я"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
-<div class="card"><b>Категорії та ліміти</b><div class="muted" style="margin:5px 0 10px">Ліміт — максимальна сума витрат на місяць.</div><div id="categorySettings"></div>
+<div class="card"><b>Категорії та підкатегорії</b><div class="muted" style="margin:5px 0 10px">Можна додавати, перейменовувати, приховувати та видаляти. Формат підкатегорії: «Авто › Пальне».</div><div id="categorySettings"></div>
 <div style="display:flex;gap:8px;margin-top:10px"><input id="newCategoryName" placeholder="Нова категорія"><input id="newCategoryLimit" type="number" placeholder="Ліміт" style="max-width:110px"><button class="btn" onclick="addCategory()">＋</button></div>
 </div>
 
@@ -281,8 +282,16 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 
 <script>
 const KEY='LIFE_V10';
-const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[],savings:{current:0,goal:0},savingGoals:[],reminders:[],fx:{usd:0,eur:0,updated:null},coins:{ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}}};
+const base={profile:{name:'Влад',currency:'UAH'},categories:{'Зарплата':0,'Грошове забезпечення (БР)':0,'Продаж':0,'Авто › Пальне':0,'Авто › Ремонт':0,'Авто › Запчастини':0,'Авто › Мийка':0,'Авто › Страхування':0,'Авто › Штрафи':0,'Житло › Оренда':0,'Житло › Комунальні':0,'Житло › Інтернет':0,'Житло › Побутові товари':0,'Житло › Ремонт та облаштування':0,'Їжа › Продукти':0,'Їжа › Ресторани та кафе':0,'Їжа › Доставка їжі':0,'Їжа › Перекуси та кава':0,'Особисте › Одяг':0,'Особисте › Взуття':0,'Особисте › Барбершоп':0,'Особисте › Догляд за собою':0,'Особисте › Гігієна':0,'Здоров’я › Лікарі':0,'Здоров’я › Стоматолог':0,'Здоров’я › Аналізи':0,'Здоров’я › Ліки':0,'Кіт › Корм':0,'Кіт › Наповнювач':0,'Кіт › Ветеринар':0,'Кіт › Інше':0,'Підписки та зв’язок › Apple та застосунки':0,'Підписки та зв’язок › Мобільний зв’язок':0,'Відпочинок › Розваги':0,'Відпочинок › Кіно':0,'Відпочинок › Подорожі та відпочинок':0,'Відпочинок › Готелі та житло':0,'Відпочинок › Чан / сауна':0,'Юридичні послуги › Адвокат':0,'Юридичні послуги › Консультація':0,'Юридичні послуги › Судові витрати та судовий збір':0,'Юридичні послуги › Нотаріус':0,'Юридичні послуги › Документи та довідки':0,'Юридичні послуги › Виконавче провадження':0,'Юридичні послуги › Інше юридичне':0,'Подарунки / допомога іншим':0,'Непередбачені витрати':0,'Інше':0},accounts:{},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[],savings:{current:0,goal:0},savingGoals:[],reminders:[],fx:{usd:0,eur:0,updated:null},coins:{ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}}};
 let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
+// LIFE v24: new personal category system. Preserve transactions and balances.
+if(!localStorage.getItem('LIFE_V24_CATEGORIES')){
+  const keepLimits=data.categories||{}; data.categories={...base.categories};
+  Object.keys(data.categories).forEach(k=>{if(keepLimits[k]!=null)data.categories[k]=keepLimits[k]});
+  data.categoryHidden=data.categoryHidden||{};
+  localStorage.setItem('LIFE_V24_CATEGORIES','1'); localStorage.setItem(KEY,JSON.stringify(data));
+}
+data.categoryHidden=data.categoryHidden||{};
 if(!localStorage.getItem('LIFE_V21_FINANCE_MIGRATION')){
   if(!data.accounts || Array.isArray(data.accounts)) data.accounts={};
   ['Картка','Готівка','Спільний рахунок'].forEach(n=>{if(n in data.accounts)delete data.accounts[n]});
@@ -372,12 +381,16 @@ function saveSettings(){data.profile={...data.profile,name:nameInput.value||'В�
 
 function monthKey(d){const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')}
 function monthLabel(k){const [y,m]=k.split('-');return new Date(+y,+m-1,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'})}
-function refreshCategorySelect(){fcat.innerHTML=Object.keys(data.categories).map(x=>`<option>${x}</option>`).join('')}
+function visibleCategories(){return Object.keys(data.categories||{}).filter(x=>!data.categoryHidden?.[x])}
+function refreshCategorySelect(){fcat.innerHTML=visibleCategories().map(x=>`<option>${x}</option>`).join('')}
 function renderCategorySettings(){
-  categorySettings.innerHTML=Object.entries(data.categories).map(([n,l])=>`<div class="catline"><div><b>${n}</b><div class="mini">Ліміт: ${l?money(l):'без ліміту'}</div></div><button class="btn2" onclick="editCategory('${n.replace(/'/g,"\\'")}')">Змінити</button></div>`).join('');
+  categorySettings.innerHTML=Object.entries(data.categories).map(([n,l])=>`<div class="catline"><div><b>${data.categoryHidden?.[n]?'🙈 ':''}${n}</b><div class="mini">Ліміт: ${l?money(l):'без ліміту'}</div></div><div style="display:flex;gap:6px"><button class="btn2" onclick="toggleCategory('${n.replace(/'/g,"\\'")}')">${data.categoryHidden?.[n]?'Показати':'Сховати'}</button><button class="btn2" onclick="editCategory('${n.replace(/'/g,"\\'")}')">Змінити</button><button class="btn2 danger" onclick="deleteCategory('${n.replace(/'/g,"\\'")}')">×</button></div></div>`).join('');
 }
-function addCategory(){const n=newCategoryName.value.trim();if(!n)return;data.categories[n]=+newCategoryLimit.value||0;newCategoryName.value='';newCategoryLimit.value='';refreshCategorySelect();renderCategorySettings();persist()}
-function editCategory(old){const nn=prompt('Назва категорії',old);if(!nn)return;const lim=+prompt('Місячний ліміт, ₴',data.categories[old]||0)||0;if(nn!==old){data.categories[nn]=lim;delete data.categories[old];data.tx.forEach(t=>{if(t.cat===old)t.cat=nn})}else data.categories[old]=lim;refreshCategorySelect();renderCategorySettings();persist()}
+function addCategory(){const n=newCategoryName.value.trim();if(!n)return;if(data.categories[n]!=null)return alert('Така категорія вже є');data.categories[n]=+newCategoryLimit.value||0;newCategoryName.value='';newCategoryLimit.value='';refreshCategorySelect();renderCategorySettings();persist()}
+function editCategory(old){const nn=prompt('Назва категорії / підкатегорії',old);if(!nn)return;const lim=+prompt('Місячний ліміт, ₴',data.categories[old]||0)||0;if(nn!==old){data.categories[nn]=lim;delete data.categories[old];if(data.categoryHidden?.[old]){data.categoryHidden[nn]=true;delete data.categoryHidden[old]}data.tx.forEach(t=>{if(t.cat===old)t.cat=nn})}else data.categories[old]=lim;refreshCategorySelect();renderCategorySettings();persist()}
+function toggleCategory(n){data.categoryHidden[n]=!data.categoryHidden[n];refreshCategorySelect();renderCategorySettings();persist()}
+function deleteCategory(n){if(!confirm('Видалити категорію «'+n+'»? Старі операції залишаться в історії.'))return;delete data.categories[n];delete data.categoryHidden[n];refreshCategorySelect();renderCategorySettings();persist()}
+
 
 
 const LIFE_AI_SERVER='https://life-push-server.m84wy6wftt.workers.dev/ai';
@@ -387,12 +400,34 @@ function lifeAIContext(){
  const accounts=Object.keys(data.accounts||{}).map(n=>({name:n,currency:accCurrency(n),balance:accountCurrent(n)}));
  const debts=(data.debts||[]).map(d=>({name:d.n,type:d.type||'Борг',currency:d.currency||'UAH',original:+d.original||+d.a||0,paid:paid(d),remaining:remain(d)}));
  const savings=(data.savingGoals||[]).map(g=>({name:g.n,currency:g.currency||'UAH',target:+g.target||0,current:sc(g)}));
- return {today:new Date().toISOString().slice(0,10),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||'Europe/Kyiv',accounts,categories:Object.keys(data.categories||{}),debts,savings};
+ return {today:new Date().toISOString().slice(0,10),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||'Europe/Kyiv',accounts,categories:visibleCategories(),debts,savings,financeRules:{income:['Зарплата','Грошове забезпечення (БР)','Продаж'],borrowedMoney:'Позичені кошти не є доходом: надходження на рахунок + борг',lentMoney:'Кошти, позичені іншій людині: списання з рахунку + запис Мені винні'}};
 }
 function openAI(){aiInput.value='';aiStatus.textContent='';clearAIResult();aiModal.classList.add('on');setTimeout(()=>aiInput.focus(),250)}
 function clearAIResult(){pendingAI=null;aiResult.classList.remove('show');aiFields.innerHTML='';aiSummary.textContent=''}
+let voiceRecognition=null,voiceListening=false;
+function toggleVoice(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){aiStatus.textContent='На цьому iPhone голосове розпізнавання в браузері недоступне. Можна використати диктування клавіатури.';return}
+ if(voiceListening&&voiceRecognition){voiceRecognition.stop();return}
+ voiceRecognition=new SR();voiceRecognition.lang='uk-UA';voiceRecognition.interimResults=false;voiceRecognition.continuous=false;
+ voiceRecognition.onstart=()=>{voiceListening=true;aiMicBtn.classList.add('listening');aiMicBtn.textContent='⏹';aiStatus.textContent='Слухаю…'};
+ voiceRecognition.onresult=e=>{const t=e.results?.[0]?.[0]?.transcript||'';if(t){aiInput.value=(aiInput.value.trim()?aiInput.value.trim()+' ':'')+t;aiStatus.textContent='Готово. Перевір текст і надішли AI.'}};
+ voiceRecognition.onerror=e=>{aiStatus.textContent='Не вдалося розпізнати голос: '+(e.error||'помилка')};
+ voiceRecognition.onend=()=>{voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️'};voiceRecognition.start();
+}
+function parseMoneyText(m){const x=m.match(/(\d[\d \u00a0]*(?:[.,]\d+)?)\s*(грн|грив|uah|дол|usd|\$|євро|eur|€)/i);if(!x)return null;const amount=parseFloat(x[1].replace(/[ \u00a0]/g,'').replace(',','.'));const z=x[2].toLowerCase();return {amount,currency:(z.includes('дол')||z==='usd'||z==='$')?'USD':(z.includes('євро')||z==='eur'||z==='€')?'EUR':'UAH'}}
+function localLoanProposal(message){
+ const m=message.trim(),money=parseMoneyText(m);if(!money||!/позич/i.test(m))return null;
+ const from=m.match(/позич\w*\s+у\s+([^,.;]+?)(?=\s+\d|$)/i);
+ if(from)return {kind:'action',action:'borrow_in',amount:money.amount,currency:money.currency,target:from[1].trim(),summary:`Позичені кошти ${money.amount} ${money.currency} від ${from[1].trim()}`,needsConfirmation:true};
+ const to=m.match(/позич\w*\s+([^,.;]+?)(?=\s+\d|$)/i);
+ if(to&&!/^у\s/i.test(to[1]))return {kind:'action',action:'lend_out',amount:money.amount,currency:money.currency,target:to[1].trim(),summary:`Позичити ${money.amount} ${money.currency}: ${to[1].trim()} буде винен тобі`,needsConfirmation:true};
+ return null;
+}
 async function sendAI(){
  const message=aiInput.value.trim();if(!message)return alert('Напиши команду для LIFE AI');
+ const loan=localLoanProposal(message);if(loan){clearAIResult();pendingAI=loan;showAIProposal(loan);return}
+
  clearAIResult();aiSendBtn.disabled=true;aiSendBtn.textContent='Думаю…';aiStatus.textContent='LIFE AI аналізує команду…';
  try{
   const r=await fetch(LIFE_AI_SERVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,context:lifeAIContext()})});
@@ -408,7 +443,7 @@ function showAIProposal(a){
  if(a.kind==='answer'||action==='query'){aiSummary.textContent=a.answer||a.summary||'Готово';aiFields.innerHTML='';aiConfirmBtn.style.display='none';aiResult.classList.add('show');return}
  if(a.kind==='clarify'&&!a.needsConfirmation){aiSummary.textContent=a.answer||a.summary||'Потрібно уточнення';aiFields.innerHTML='<div class="muted">Допиши уточнення у полі вище та надішли ще раз.</div>';aiConfirmBtn.style.display='none';aiResult.classList.add('show');return}
  aiConfirmBtn.style.display='block';aiSummary.textContent=a.summary||'Перевір дію перед збереженням';
- let h='';const names=Object.keys(data.accounts||{}),cats=Object.keys(data.categories||{});
+ let h='';const names=Object.keys(data.accounts||{}),cats=visibleCategories();
  if(['expense','income'].includes(action)){
   if(!names.length){h='<div class="danger">Спочатку створи рахунок у Фінансах.</div>';aiConfirmBtn.style.display='none'}else{
    const ma=matchName(names,a.account)||names[0], mc=matchName(cats,a.category)||cats[0];
@@ -416,6 +451,8 @@ function showAIProposal(a){
   }
  }else if(action==='transfer'){
   if(names.length<2){h='<div class="danger">Для переказу потрібно щонайменше 2 рахунки.</div>';aiConfirmBtn.style.display='none'}else{const f=matchName(names,a.account)||names[0],t=matchName(names,a.toAccount)||names.find(x=>x!==f)||names[0];h+=`<input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><select id="aiAccount">${opts(names,f)}</select><select id="aiToAccount">${opts(names,t)}</select>`}
+ }else if(['borrow_in','lend_out'].includes(action)){
+  if(!names.length){h='<div class="danger">Спочатку створи рахунок у Фінансах.</div>';aiConfirmBtn.style.display='none'}else{const ma=names.find(n=>accCurrency(n)===(a.currency||'UAH'))||names[0];h+=`<div class="muted">Сума</div><input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><div class="muted">${action==='borrow_in'?'У кого позичив':'Кому позичив'}</div><input id="aiLoanPerson" value="${aiEsc(a.target||'')}"><div class="muted">Рахунок</div><select id="aiAccount">${opts(names,ma)}</select><div class="mini" style="margin-top:7px">${action==='borrow_in'?'Це не буде доходом: LIFE додасть гроші на рахунок і створить твій борг.':'Це не буде звичайною витратою: LIFE спише гроші й створить запис «Мені винні».'}</div>`}
  }else if(action==='debt_payment'){
   const ds=(data.debts||[]).map(d=>d.n),m=matchName(ds,a.target);if(!ds.length){h='<div class="danger">У LIFE немає боргів.</div>';aiConfirmBtn.style.display='none'}else h+=`<input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><select id="aiTarget">${opts(ds,m||ds[0])}</select>`;
  }else if(['saving_add','saving_remove'].includes(action)){
@@ -434,6 +471,8 @@ async function confirmAI(){
    data.tx.unshift({type:action,amount,account,owner:'Особисте',cat,note:a.summary||cat,date:new Date().toISOString()});data.accounts[account]=(data.accounts[account]||0)+(action==='income'?amount:-amount);
   }else if(action==='transfer'){
    const amount=+aiAmount.value||0,f=aiAccount.value,t=aiToAccount.value;if(amount<=0||f===t)throw new Error('Перевір суму та рахунки');if(accCurrency(f)!==accCurrency(t))throw new Error('Переказ між різними валютами поки без автоконвертації');data.accounts[f]-=amount;data.accounts[t]+=amount;data.tx.unshift({type:'transfer',amount,account:f,toAccount:t,owner:'Особисте',cat:'Переказ',note:f+' → '+t,date:new Date().toISOString()});
+  }else if(['borrow_in','lend_out'].includes(action)){
+   const amount=+aiAmount.value||0,account=aiAccount.value,person=aiLoanPerson.value.trim();if(amount<=0||!person)throw new Error('Перевір суму та ім’я');const direction=action==='borrow_in'?'i_owe':'owed_to_me';data.debts=data.debts||[];data.debts.push({id:Date.now(),n:person,type:direction==='i_owe'?'Борг':'Мені винні',direction,currency:a.currency||accCurrency(account),original:amount,payments:[]});data.accounts[account]=(data.accounts[account]||0)+(action==='borrow_in'?amount:-amount);data.tx.unshift({type:action,amount,account,owner:'Особисте',cat:action==='borrow_in'?'Позичені кошти':'Мені винні',note:a.summary||person,date:new Date().toISOString()});
   }else if(action==='debt_payment'){
    const d=data.debts.find(x=>x.n===aiTarget.value),amount=+aiAmount.value||0;if(!d||amount<=0)throw new Error('Перевір борг і суму');d.payments=d.payments||[];d.payments.push({id:Date.now(),amount:Math.min(amount,remain(d)),date:new Date().toISOString()});
   }else if(['saving_add','saving_remove'].includes(action)){
@@ -573,7 +612,7 @@ function render(){
  const accNames=Object.keys(data.accounts||{});
 accounts.innerHTML=accNames.length?accNames.map(n=>{const c=accCurrency(n);return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${n}</b><div class="mini">${c}</div></div><b>${fc(accountCurrent(n),c)}</b></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openAccountMove('${n.replace(/'/g,"\\'")}')">± Змінити</button><button class="btn2 danger" onclick="deleteAccount('${n.replace(/'/g,"\\'")}')">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Рахунків ще немає — баланс 0 ₴</div>';
 const accountsUAH=accNames.reduce((s,n)=>{const v=accountCurrent(n),c=accCurrency(n);if(c==='USD')return s+v*(data.fx.usd||0);if(c==='EUR')return s+v*(data.fx.eur||0);return s+v},0);balance.textContent=money(accountsUAH);
-debts.innerHTML=(data.debts||[]).length?data.debts.map(d=>{if(!d.id)d.id=Date.now()+Math.floor(Math.random()*9999);d.currency=d.currency||'UAH';d.original=+d.original||+d.a||0;d.payments=d.payments||[];const p=paid(d),r=remain(d),pc=d.original?Math.min(100,p/d.original*100):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${d.type||'Борг'}: ${d.n}</b><div class="mini">Сплачено ${fc(p,d.currency)}</div></div><b>${fc(r,d.currency)}</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openDebtPayment(${d.id})">＋ Платіж</button><button class="btn2 danger" onclick="deleteDebt(${d.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Поки 0 боргів і штрафів</div>';
+debts.innerHTML=(data.debts||[]).length?data.debts.map(d=>{if(!d.id)d.id=Date.now()+Math.floor(Math.random()*9999);d.currency=d.currency||'UAH';d.original=+d.original||+d.a||0;d.payments=d.payments||[];const p=paid(d),r=remain(d),pc=d.original?Math.min(100,p/d.original*100):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${d.type||'Борг'}: ${d.n}</b><div class="mini">Сплачено ${fc(p,d.currency)}</div></div><b>${fc(r,d.currency)}</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openDebtPayment(${d.id})">＋ Платіж</button><button class="btn2 danger" onclick="deleteDebt(${d.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Поки немає боргів або записів «Мені винні»</div>';
 const gs=data.savingGoals||[];savingGoals.innerHTML=gs.length?gs.map(g=>{const c=sc(g),pc=g.target?Math.min(100,Math.max(0,c/g.target*100)):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${g.n}</b><div class="mini">${fc(c,g.currency)} / ${fc(g.target,g.currency)}</div></div><b>${Math.round(pc)}%</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openSavingMove(${g.id})">± Змінити</button><button class="btn2 danger" onclick="deleteSavingGoal(${g.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Цілей ще немає</div>';assetSavingGoals.innerHTML=gs.length?gs.map(g=>`<div class="row"><span>${g.n}</span><b>${fc(sc(g),g.currency)}</b></div>`).join(''):'Цілей ще немає';
  const vals=Object.entries(data.coins).map(([n,v])=>[n,v.q*v.p,v]); const total=vals.reduce((s,x)=>s+x[1],0); assetTotal.textContent=cryptoTotal.textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:2});
  coins.innerHTML=vals.map(([n,val,v])=>`<div class="row"><div><b>${n}</b><div class="muted">${v.q} × $${v.p}</div></div><b>$${val.toLocaleString('en-US',{maximumFractionDigits:2})}</b></div>`).join('');
