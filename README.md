@@ -4,3 +4,5 @@ Premium UI preserved. Fixed stray \n markers and compact Plans composer. Manual 
 
 
 LIFE v30 Finance: smart recurring payments, transaction filters, split debts, savings progress, monthly analytics.
+
+LIFE v30.1: category budgets can now be added, edited, and removed directly from Finance.
