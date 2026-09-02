@@ -1,4 +1,4 @@
-LIFE v13 Push — OneSignal Web Push integration
-App ID: be448e27-083e-41b3-8235-1eab1e38e977
-
 # LIFE v12
+
+
+LIFE v13 Push: OneSignal Web SDK v16 integration, App ID configured, Safari Web ID configured, dedicated OneSignal worker with /LIFE/push/ scope so it does not replace the LIFE PWA service worker.

@@ -73,7 +73,45 @@ input,select{padding:10px;border-radius:11px}.sheet{padding:16px 14px 24px;borde
 .install{padding:10px;border-radius:15px;margin:9px 0}.install.show{margin-bottom:10px}
 @media (max-width:390px){.app{padding-left:11px;padding-right:11px}.title{font-size:20px}.card{padding:10px 11px}.quick button{min-height:45px}}
 </style>
+
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+window.OneSignalDeferred.push(async function(OneSignal) {
+  try {
+    await OneSignal.init({
+      appId: "be448e27-083e-41b3-8235-1eab1e38e977",
+      safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
+      serviceWorkerPath: "OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "/LIFE/push/" }
+    });
+
+    const verifyKey = "life_onesignal_verify_v13";
+    if (!localStorage.getItem(verifyKey)) {
+      localStorage.setItem(verifyKey, "shown");
+      setTimeout(async () => {
+        const ok = window.confirm(
+          "OneSignal підключено до LIFE!\n\nНатисни OK, щоб дозволити справжні push-повідомлення на iPhone."
+        );
+        if (ok) await OneSignal.Notifications.requestPermission();
+      }, 700);
+    }
+
+    const reportSubscription = () => {
+      const id = OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.id;
+      if (id) {
+        console.log("LIFE OneSignal push subscription registered:", id);
+        localStorage.setItem("life_onesignal_subscription_id", id);
+      }
+    };
+    OneSignal.User.PushSubscription.addEventListener("change", reportSubscription);
+    reportSubscription();
+  } catch (err) {
+    console.error("LIFE OneSignal init error", err);
+  }
+});
+</script>
+
 </head>
 <body>
 <main class="app">
@@ -167,7 +205,7 @@ input,select{padding:10px;border-radius:11px}.sheet{padding:16px 14px 24px;borde
 <div class="muted" id="pushState" style="margin-top:10px"></div>
 <button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
 </div></div>
-<div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування <span class="mini">v13 Push</span></h2><input id="nameInput" placeholder="Твоє ім'я"><input id="partnerInput" placeholder="Партнер"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
+<div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування</h2><input id="nameInput" placeholder="Твоє ім'я"><input id="partnerInput" placeholder="Партнер"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
 <div class="card"><b>Категорії та ліміти</b><div class="muted" style="margin:5px 0 10px">Ліміт — максимальна сума витрат на місяць.</div><div id="categorySettings"></div>
 <div style="display:flex;gap:8px;margin-top:10px"><input id="newCategoryName" placeholder="Нова категорія"><input id="newCategoryLimit" type="number" placeholder="Ліміт" style="max-width:110px"><button class="btn" onclick="addCategory()">＋</button></div>
 </div>
@@ -225,55 +263,18 @@ function saveReminder(){
   closeAll();persist();scheduleLocalChecks();
 }
 function removeReminder(id){data.reminders=(data.reminders||[]).filter(x=>x.id!==id);persist()}
-const LifePush={
-  ready:false, os:null, subscriptionId:null,
-  async init(){
-    window.OneSignalDeferred=window.OneSignalDeferred||[];
-    window.OneSignalDeferred.push(async (OneSignal)=>{
-      try{
-        await OneSignal.init({
-          appId:'be448e27-083e-41b3-8235-1eab1e38e977',
-          serviceWorkerPath:'LIFE/sw.js',
-          serviceWorkerParam:{scope:'/LIFE/'},
-          autoResubscribe:true
-        });
-        this.os=OneSignal; this.ready=true;
-        const changed=(ev)=>{this.subscriptionId=(ev&&ev.current&&ev.current.id)||OneSignal.User.PushSubscription.id||null;this.updateUI();this.verify();};
-        OneSignal.User.PushSubscription.addEventListener('change',changed);
-        OneSignal.Notifications.addEventListener('permissionChange',()=>this.updateUI());
-        this.subscriptionId=OneSignal.User.PushSubscription.id||null;
-        this.updateUI(); this.verify();
-      }catch(e){console.error('LIFE Push init',e);this.updateUI('Помилка підключення OneSignal');}
-    });
-  },
-  async request(){
-    if(!this.ready||!this.os){this.updateUI('Push ще завантажується. Спробуй ще раз через кілька секунд.');return;}
-    try{
-      if(!this.os.Notifications.isPushSupported()){this.updateUI('Web Push не підтримується тут. Відкрий LIFE з іконки на головному екрані iPhone.');return;}
-      await this.os.Notifications.requestPermission();
-      if(this.os.Notifications.permission) await this.os.User.PushSubscription.optIn();
-      this.subscriptionId=this.os.User.PushSubscription.id||null;
-      this.updateUI(); this.verify();
-    }catch(e){console.error(e);this.updateUI('Не вдалося увімкнути Push');}
-  },
-  updateUI(message){
-    if(!window.pushState)return;
-    if(message){pushState.textContent=message;return;}
-    if(!this.ready){pushState.textContent='Push підключається…';return;}
-    const permission=!!this.os.Notifications.permission;
-    const opted=!!this.os.User.PushSubscription.optedIn;
-    const id=this.os.User.PushSubscription.id;
-    pushState.textContent=(permission&&opted&&id)?'Push активний ✅ • '+id.slice(0,8)+'…':permission?'Дозвіл є. Завершуємо підписку…':'Натисни «Увімкнути сповіщення»';
-  },
-  verify(){
-    const id=this.os&&this.os.User.PushSubscription.id;
-    if(!id||String(id).startsWith('local-')||sessionStorage.getItem('life-os-verified'))return;
-    sessionStorage.setItem('life-os-verified','1');
-    setTimeout(()=>alert('LIFE Push підключено ✅\\n\\nЦей iPhone зареєстрований у OneSignal.'),150);
-  }
-};
-async function requestPushPermission(){return LifePush.request()}
-function updatePushState(){return LifePush.updateUI()}
+async function requestPushPermission(){
+  if(!('Notification' in window)){pushState.textContent='Цей браузер не підтримує Notifications API';return}
+  try{
+    const p=await Notification.requestPermission();updatePushState();
+    if(p==='granted') new Notification('LIFE',{body:'Сповіщення увімкнено ✅'});
+  }catch(e){pushState.textContent='Не вдалося запросити дозвіл'}
+}
+function updatePushState(){
+  if(!('Notification' in window)){pushState.textContent='Notifications API недоступний';return}
+  const p=Notification.permission;
+  pushState.textContent=p==='granted'?'Дозвіл на сповіщення: увімкнено ✅':p==='denied'?'Сповіщення заборонені в налаштуваннях iPhone':'Потрібно дозволити сповіщення';
+}
 function fireLocalReminder(r){
   if(Notification.permission==='granted'){
     try{new Notification('LIFE',{body:r.text,icon:'./icon.svg'})}catch(e){}
@@ -353,6 +354,6 @@ document.querySelector('#home .title').textContent='Привіт, '+data.profile
 refreshCategorySelect(); coinName.innerHTML=coinList.map(x=>`<option>${x}</option>`).join('');
 if(/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) installBox.classList.add('show');
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(r=>{r.update().catch(()=>{});}).catch(()=>{});navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('life-sw-reloaded')){sessionStorage.setItem('life-sw-reloaded','1');location.reload();}});}
-LifePush.init();render();scheduleLocalChecks();refreshMarkets();setInterval(refreshMarkets,60000);
+render();scheduleLocalChecks();refreshMarkets();setInterval(refreshMarkets,60000);
 </script>
 </body></html>
