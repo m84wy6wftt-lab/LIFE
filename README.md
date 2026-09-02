@@ -1,6 +1,6 @@
-# LIFE v15 OneSignal Worker Fix
+# LIFE v16 — OneSignal Combined Worker Fix
 
-- Correct GitHub Pages service worker path: `LIFE/OneSignalSDKWorker.js`
-- OneSignal scope: `/LIFE/push/`
-- Removed duplicate `OneSignal.init()` from v14
-- Push diagnostics remain visible in LIFE
+- OneSignal is combined into the existing LIFE PWA service worker (`sw.js`).
+- OneSignal worker path: `LIFE/sw.js`
+- Worker scope: `/LIFE/`
+- Keeps the existing LIFE local data key unchanged.

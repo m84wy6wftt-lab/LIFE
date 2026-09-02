@@ -108,8 +108,8 @@ window.OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "be448e27-083e-41b3-8235-1eab1e38e977",
       safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
-      serviceWorkerPath: "LIFE/OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/LIFE/push/" }
+      serviceWorkerPath: "LIFE/sw.js",
+      serviceWorkerParam: { scope: "/LIFE/" }
     });
     window.LIFEOneSignal=OneSignal;
     window.LIFEOneSignalReady=true;
