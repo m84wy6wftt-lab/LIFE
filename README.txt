@@ -1,2 +1,1 @@
-LIFE v11 — compact UI
-Щільніший інтерфейс для iPhone: менші картки, відступи, заголовки, навігація та кнопка +.
+LIFE v12: compact UI polish, floating + positioning, and improved PWA auto-update/cache refresh.

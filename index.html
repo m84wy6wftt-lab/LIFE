@@ -59,6 +59,20 @@ input,select{padding:10px;border-radius:11px}.sheet{padding:16px 14px 24px;borde
 .progress,.bar{height:6px}
 @media (max-width:390px){.app{padding-left:12px;padding-right:12px}.title{font-size:22px}.card{padding:12px}.big{font-size:25px}.quick button{min-height:50px;padding:9px 10px}}
 </style>
+
+<style id="v12-polish">
+/* LIFE v12 — tighter native-like iPhone layout */
+.app{padding:calc(10px + env(safe-area-inset-top)) 13px calc(82px + env(safe-area-inset-bottom))}
+.logo{font-size:25px}.title{font-size:21px;margin:12px 0 1px}.card{padding:11px 12px;margin:8px 0;border-radius:17px}
+.big{font-size:25px}.grid{gap:7px}.row{padding:8px 0}.quick{gap:7px}.quick button{min-height:47px;padding:8px 10px;font-size:13px}
+#home .card:first-of-type{padding:11px 13px}#home .card:first-of-type .big{font-size:26px;line-height:1.08;margin:2px 0}
+#home .grid .card{min-height:68px}#home .grid .card b{font-size:16px}
+#home .quick{margin-top:7px!important}.badge{font-size:10px;padding:4px 7px}
+.nav{padding:5px 3px calc(5px + env(safe-area-inset-bottom))}.nav button{font-size:9px}.nav b{font-size:17px}
+.fab{right:max(13px,calc((100vw - 520px)/2 + 13px));bottom:calc(66px + env(safe-area-inset-bottom));width:46px;height:46px;border-radius:15px;font-size:21px;box-shadow:0 8px 24px #0008}
+.install{padding:10px;border-radius:15px;margin:9px 0}.install.show{margin-bottom:10px}
+@media (max-width:390px){.app{padding-left:11px;padding-right:11px}.title{font-size:20px}.card{padding:10px 11px}.quick button{min-height:45px}}
+</style>
 </head>
 <body>
 <main class="app">
@@ -300,7 +314,7 @@ document.querySelector('#home .title').textContent='Привіт, '+data.profile
 }
 refreshCategorySelect(); coinName.innerHTML=coinList.map(x=>`<option>${x}</option>`).join('');
 if(/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) installBox.classList.add('show');
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(r=>{r.update().catch(()=>{});}).catch(()=>{});navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('life-sw-reloaded')){sessionStorage.setItem('life-sw-reloaded','1');location.reload();}});}
 render();scheduleLocalChecks();refreshMarkets();setInterval(refreshMarkets,60000);
 </script>
 </body></html>
