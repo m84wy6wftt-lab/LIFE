@@ -1,3 +1,3 @@
-LIFE v20 — Accounts
+LIFE v20.1 — Zero Balance Fix
 
-Balance starts at 0. Add your own UAH/USD/EUR accounts, set initial balances, and record top-ups/write-offs. Existing Push, crypto, debts and savings are preserved.
+One-time reset of the old balance. Dashboard balance is now based only on accounts created by the user. Crypto, Push, reminders, debts and savings are preserved.
