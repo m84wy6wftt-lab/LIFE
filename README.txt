@@ -1,2 +1,2 @@
-LIFE v28 Premium System
-7 files for GitHub Pages. Cloudflare Worker v26 remains unchanged. Existing LIFE_V10 data is preserved.
+LIFE v28.1 Premium System
+Premium Plans + Assets/Crypto. LIFE_V10 preserved.

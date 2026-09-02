@@ -1,7 +1,3 @@
-# LIFE v28 Premium System
+# LIFE v28.1 Premium System
 
-Повний premium-дизайн для Головної, Фінансів, Покупок, Планів та Активів.
-
-Додано Smart Finance: обов’язкові щомісячні платежі, реально вільні гроші, бюджети категорій, компактні batch-картки LIFE AI, рахунок для всіх та Undo після AI-операцій.
-
-Збережено LIFE_V10, Push, OneSignal, Voice Intelligence та поточні дані.
+Premium redesign for Plans and Assets/Crypto. Preserves LIFE_V10 data, AI, Voice and Push.
