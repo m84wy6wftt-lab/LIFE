@@ -82,7 +82,7 @@ textarea{width:100%;min-height:108px;resize:none;padding:12px;border-radius:13px
 .ai-result{display:none;background:#171a1f;border:1px solid #30363e;border-radius:15px;padding:12px;margin:10px 0}.ai-result.show{display:block}
 .ai-result .ai-summary{font-weight:800;margin-bottom:8px}.ai-result select{margin-top:7px}
 .ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.ai-input-row{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:stretch}.ai-input-row textarea{margin:0}.ai-mic{font-size:22px;min-height:54px}.ai-mic.listening{box-shadow:0 0 0 2px var(--accent) inset}
+.ai-input-row{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:stretch}.ai-input-row textarea{margin:0}.ai-mic{font-size:22px;min-height:54px}.ai-mic.listening{box-shadow:0 0 0 2px var(--accent) inset}.ai-batch{display:grid;gap:10px}.ai-batch-card{border:1px solid #343b44;background:#111419;border-radius:13px;padding:10px}.ai-batch-title{font-weight:800;color:var(--accent);margin-bottom:7px}.ai-batch-card input,.ai-batch-card select{margin-top:5px}
 </style>
 </style>
 
@@ -401,7 +401,7 @@ function lifeAIContext(){
  const accounts=Object.keys(data.accounts||{}).map(n=>({name:n,currency:accCurrency(n),balance:accountCurrent(n)}));
  const debts=(data.debts||[]).map(d=>({name:d.n,type:d.type||'Борг',currency:d.currency||'UAH',original:+d.original||+d.a||0,paid:paid(d),remaining:remain(d)}));
  const savings=(data.savingGoals||[]).map(g=>({name:g.n,currency:g.currency||'UAH',target:+g.target||0,current:sc(g)}));
- return {today:new Date().toISOString().slice(0,10),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||'Europe/Kyiv',accounts,categories:visibleCategories(),debts,savings,financeRules:{income:['Зарплата','Грошове забезпечення (БР)','Продаж'],borrowedMoney:'Позичені кошти не є доходом: надходження на рахунок + борг',lentMoney:'Кошти, позичені іншій людині: списання з рахунку + запис Мені винні'}};
+ return {today:new Date().toISOString().slice(0,10),localTime:new Date().toLocaleString('sv-SE'),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||'Europe/Kyiv',accounts,categories:visibleCategories(),debts,savings,financeRules:{income:['Зарплата','Грошове забезпечення (БР)','Продаж'],borrowedMoney:'Позичені кошти не є доходом: надходження на рахунок + борг',lentMoney:'Кошти, позичені іншій людині: списання з рахунку + запис Мені винні'}};
 }
 function openAI(){aiInput.value='';aiStatus.textContent='';clearAIResult();aiModal.classList.add('on');setTimeout(()=>aiInput.focus(),250)}
 function clearAIResult(){pendingAI=null;aiResult.classList.remove('show');aiFields.innerHTML='';aiSummary.textContent=''}
@@ -430,12 +430,12 @@ async function toggleVoice(){
    aiStatus.textContent='Розпізнаю голос…';aiMicBtn.disabled=true;
    try{
     const type=voiceRecorder.mimeType||mime||'audio/mp4';const ext=type.includes('mp4')?'m4a':type.includes('webm')?'webm':'audio';
-    const blob=new Blob(voiceChunks,{type});const fd=new FormData();fd.append('file',blob,'life-voice.'+ext);fd.append('language','uk');
+    const blob=new Blob(voiceChunks,{type});const fd=new FormData();fd.append('file',blob,'life-voice.'+ext);
     const r=await fetch(LIFE_TRANSCRIBE_SERVER,{method:'POST',body:fd});const out=await r.json();if(!r.ok||!out.ok)throw new Error(out.error||('HTTP '+r.status));
     const t=String(out.text||'').trim();if(!t)throw new Error('Не вдалося розпізнати слова');aiInput.value=(aiInput.value.trim()?aiInput.value.trim()+' ':'')+t;aiStatus.textContent='Готово. Перевір текст і надішли AI.';
    }catch(e){console.error('Voice transcription error',e);aiStatus.textContent='Помилка голосу: '+String(e.message||e).slice(0,160)}finally{aiMicBtn.disabled=false;voiceChunks=[];voiceRecorder=null}
   };
-  voiceRecorder.start();
+  voiceRecorder.start(1000);
  }catch(e){await stopVoiceTracks();voiceListening=false;aiMicBtn.classList.remove('listening');aiMicBtn.textContent='🎙️';aiStatus.textContent=(e?.name==='NotAllowedError')?'Дозволь LIFE доступ до мікрофона в Safari.':'Не вдалося увімкнути мікрофон: '+String(e.message||e)}
 }
 function parseMoneyText(m){const x=m.match(/(\d[\d \u00a0]*(?:[.,]\d+)?)\s*(грн|грив|uah|дол|usd|\$|євро|eur|€)/i);if(!x)return null;const amount=parseFloat(x[1].replace(/[ \u00a0]/g,'').replace(',','.'));const z=x[2].toLowerCase();return {amount,currency:(z.includes('дол')||z==='usd'||z==='$')?'USD':(z.includes('євро')||z==='eur'||z==='€')?'EUR':'UAH'}}
@@ -449,8 +449,6 @@ function localLoanProposal(message){
 }
 async function sendAI(){
  const message=aiInput.value.trim();if(!message)return alert('Напиши команду для LIFE AI');
- const loan=localLoanProposal(message);if(loan){clearAIResult();pendingAI=loan;showAIProposal(loan);return}
-
  clearAIResult();aiSendBtn.disabled=true;aiSendBtn.textContent='Думаю…';aiStatus.textContent='LIFE AI аналізує команду…';
  try{
   const r=await fetch(LIFE_AI_SERVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,context:lifeAIContext()})});
@@ -462,7 +460,9 @@ async function sendAI(){
 function opts(list,selected){return list.map(v=>`<option value="${aiEsc(v)}" ${v===selected?'selected':''}>${aiEsc(v)}</option>`).join('')}
 function matchName(list,want){if(!want)return null;const q=String(want).toLowerCase();return list.find(x=>String(x).toLowerCase()===q)||list.find(x=>String(x).toLowerCase().includes(q)||q.includes(String(x).toLowerCase()))||null}
 function showAIProposal(a){
- aiStatus.textContent='';const action=a.action||'unknown';
+ aiStatus.textContent='';
+ if(a.kind==='batch'&&Array.isArray(a.actions)){showAIBatch(a);return}
+ const action=a.action||'unknown';
  if(a.kind==='answer'||action==='query'){aiSummary.textContent=a.answer||a.summary||'Готово';aiFields.innerHTML='';aiConfirmBtn.style.display='none';aiResult.classList.add('show');return}
  if(a.kind==='clarify'&&!a.needsConfirmation){aiSummary.textContent=a.answer||a.summary||'Потрібно уточнення';aiFields.innerHTML='<div class="muted">Допиши уточнення у полі вище та надішли ще раз.</div>';aiConfirmBtn.style.display='none';aiResult.classList.add('show');return}
  aiConfirmBtn.style.display='block';aiSummary.textContent=a.summary||'Перевір дію перед збереженням';
@@ -477,7 +477,7 @@ function showAIProposal(a){
  }else if(['borrow_in','lend_out'].includes(action)){
   if(!names.length){h='<div class="danger">Спочатку створи рахунок у Фінансах.</div>';aiConfirmBtn.style.display='none'}else{const ma=names.find(n=>accCurrency(n)===(a.currency||'UAH'))||names[0];h+=`<div class="muted">Сума</div><input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><div class="muted">${action==='borrow_in'?'У кого позичив':'Кому позичив'}</div><input id="aiLoanPerson" value="${aiEsc(a.target||'')}"><div class="muted">Рахунок</div><select id="aiAccount">${opts(names,ma)}</select><div class="mini" style="margin-top:7px">${action==='borrow_in'?'Це не буде доходом: LIFE додасть гроші на рахунок і створить твій борг.':'Це не буде звичайною витратою: LIFE спише гроші й створить запис «Мені винні».'}</div>`}
  }else if(action==='debt_payment'){
-  const ds=(data.debts||[]).map(d=>d.n),m=matchName(ds,a.target);if(!ds.length){h='<div class="danger">У LIFE немає боргів.</div>';aiConfirmBtn.style.display='none'}else h+=`<input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><select id="aiTarget">${opts(ds,m||ds[0])}</select>`;
+  const ds=(data.debts||[]).map(d=>d.n),m=matchName(ds,a.target);if(!ds.length||!names.length){h='<div class="danger">Потрібен борг і хоча б один рахунок.</div>';aiConfirmBtn.style.display='none'}else {const debt=data.debts.find(d=>d.n===(m||ds[0]));const ma=names.find(n=>accCurrency(n)===(debt?.currency||a.currency||'UAH'))||names[0];h+=`<div class="muted">Сума</div><input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><div class="muted">Борг / Мені винні</div><select id="aiTarget">${opts(ds,m||ds[0])}</select><div class="muted">Рахунок</div><select id="aiAccount">${opts(names,ma)}</select>`;}
  }else if(['saving_add','saving_remove'].includes(action)){
   const gs=(data.savingGoals||[]).map(g=>g.n),m=matchName(gs,a.target);if(!gs.length){h='<div class="danger">У LIFE немає цілей накопичення.</div>';aiConfirmBtn.style.display='none'}else h+=`<input id="aiAmount" type="number" step="any" value="${+a.amount||''}"><select id="aiTarget">${opts(gs,m||gs[0])}</select>`;
  }else if(action==='reminder'){
@@ -485,9 +485,53 @@ function showAIProposal(a){
  }else{h='<div class="muted">AI не зміг визначити дію. Спробуй сформулювати інакше.</div>';aiConfirmBtn.style.display='none'}
  aiFields.innerHTML=h;aiResult.classList.add('show');
 }
+function batchFieldHTML(a,i){
+ const p=`b${i}_`,names=Object.keys(data.accounts||{}),cats=visibleCategories(),action=a.action||'unknown';let h='';
+ if(['expense','income'].includes(action)){
+  if(!names.length)return '<div class="danger">Немає рахунків.</div>';
+  const ma=matchName(names,a.account)||names[0],mc=matchName(cats,a.category)||cats[0];
+  h+=`<input id="${p}amount" type="number" step="any" value="${+a.amount||''}"><select id="${p}account">${opts(names,ma)}</select><select id="${p}category">${opts(cats,mc)}</select>`;
+ }else if(action==='transfer'){
+  if(names.length<2)return '<div class="danger">Потрібно 2 рахунки.</div>';
+  const f=matchName(names,a.account)||names[0],t=matchName(names,a.toAccount)||names.find(x=>x!==f)||names[0];h+=`<input id="${p}amount" type="number" step="any" value="${+a.amount||''}"><select id="${p}account">${opts(names,f)}</select><select id="${p}toAccount">${opts(names,t)}</select>`;
+ }else if(['borrow_in','lend_out'].includes(action)){
+  if(!names.length)return '<div class="danger">Немає рахунків.</div>';
+  const ma=names.find(n=>accCurrency(n)===(a.currency||'UAH'))||names[0];h+=`<input id="${p}amount" type="number" step="any" value="${+a.amount||''}"><input id="${p}target" value="${aiEsc(a.target||'')}" placeholder="Людина"><select id="${p}account">${opts(names,ma)}</select>`;
+ }else if(action==='debt_payment'){
+  const ds=(data.debts||[]).map(d=>d.n),m=matchName(ds,a.target);if(!ds.length||!names.length)return '<div class="danger">Немає потрібного боргу або рахунку.</div>';
+  const debt=data.debts.find(d=>d.n===(m||ds[0])),ma=names.find(n=>accCurrency(n)===(debt?.currency||a.currency||'UAH'))||names[0];h+=`<input id="${p}amount" type="number" step="any" value="${+a.amount||''}"><select id="${p}target">${opts(ds,m||ds[0])}</select><select id="${p}account">${opts(names,ma)}</select>`;
+ }else if(['saving_add','saving_remove'].includes(action)){
+  const gs=(data.savingGoals||[]).map(g=>g.n),m=matchName(gs,a.target);if(!gs.length)return '<div class="danger">Немає цілей накопичення.</div>';h+=`<input id="${p}amount" type="number" step="any" value="${+a.amount||''}"><select id="${p}target">${opts(gs,m||gs[0])}</select>`;
+ }else if(action==='reminder'){
+  h+=`<input id="${p}text" value="${aiEsc(a.summary||a.answer||'Нагадування')}"><input id="${p}date" type="date" value="${aiEsc(a.date||new Date().toISOString().slice(0,10))}"><input id="${p}time" type="time" value="${aiEsc(a.time||'')}">`;
+ }else return '<div class="danger">Цю дію LIFE поки не може виконати автоматично.</div>';
+ return h;
+}
+function showAIBatch(batch){
+ const actions=batch.actions||[];aiSummary.textContent=batch.summary||`Знайдено дій: ${actions.length}`;
+ aiFields.innerHTML=`<div class="ai-batch">${actions.map((a,i)=>`<div class="ai-batch-card"><div class="ai-batch-title">${i+1}. ${aiEsc(a.summary||a.action||'Дія')}</div>${batchFieldHTML(a,i)}</div>`).join('')}</div>`;
+ const bad=actions.some(a=>!['expense','income','transfer','borrow_in','lend_out','debt_payment','saving_add','saving_remove','reminder'].includes(a.action));
+ aiConfirmBtn.style.display=bad?'none':'block';aiConfirmBtn.textContent='Підтвердити все';aiResult.classList.add('show');
+}
+function bv(i,k){return document.getElementById(`b${i}_${k}`)?.value??''}
+async function applyBatchAction(a,i){
+ const action=a.action,now=new Date().toISOString();
+ if(['expense','income'].includes(action)){const amount=+bv(i,'amount')||0,account=bv(i,'account'),cat=bv(i,'category');if(amount<=0||!account)throw new Error(`Дія ${i+1}: перевір суму/рахунок`);data.tx.unshift({type:action,amount,account,owner:'Особисте',cat,note:a.summary||cat,date:now});data.accounts[account]=(data.accounts[account]||0)+(action==='income'?amount:-amount);return}
+ if(action==='transfer'){const amount=+bv(i,'amount')||0,f=bv(i,'account'),t=bv(i,'toAccount');if(amount<=0||!f||!t||f===t)throw new Error(`Дія ${i+1}: перевір переказ`);if(accCurrency(f)!==accCurrency(t))throw new Error(`Дія ${i+1}: різні валюти без автоконвертації`);data.accounts[f]-=amount;data.accounts[t]+=amount;data.tx.unshift({type:'transfer',amount,account:f,toAccount:t,owner:'Особисте',cat:'Переказ',note:f+' → '+t,date:now});return}
+ if(['borrow_in','lend_out'].includes(action)){const amount=+bv(i,'amount')||0,account=bv(i,'account'),person=bv(i,'target').trim();if(amount<=0||!account||!person)throw new Error(`Дія ${i+1}: перевір позику`);const direction=action==='borrow_in'?'i_owe':'owed_to_me';data.debts=data.debts||[];data.debts.push({id:Date.now()+i,n:person,type:direction==='i_owe'?'Борг':'Мені винні',direction,currency:a.currency||accCurrency(account),original:amount,payments:[]});data.accounts[account]=(data.accounts[account]||0)+(action==='borrow_in'?amount:-amount);data.tx.unshift({type:action,amount,account,owner:'Особисте',cat:action==='borrow_in'?'Позичені кошти':'Мені винні',note:a.summary||person,date:now});return}
+ if(action==='debt_payment'){const d=data.debts.find(x=>x.n===bv(i,'target')),amount=+bv(i,'amount')||0,account=bv(i,'account');if(!d||amount<=0||!account)throw new Error(`Дія ${i+1}: перевір борг`);const applied=Math.min(amount,remain(d));d.payments=d.payments||[];d.payments.push({id:Date.now()+i,amount:applied,date:now,account});data.accounts[account]=(data.accounts[account]||0)+(d.direction==='owed_to_me'?applied:-applied);data.tx.unshift({type:'debt_payment',amount:applied,account,owner:'Особисте',cat:d.direction==='owed_to_me'?'Повернення боргу мені':'Погашення боргу',note:d.n,date:now});return}
+ if(['saving_add','saving_remove'].includes(action)){const g=data.savingGoals.find(x=>x.n===bv(i,'target')),amount=+bv(i,'amount')||0;if(!g||amount<=0)throw new Error(`Дія ${i+1}: перевір накопичення`);g.moves=g.moves||[];g.moves.push({id:Date.now()+i,type:action==='saving_remove'?'remove':'add',amount,date:now});return}
+ if(action==='reminder'){const subscriptionId=localStorage.getItem('life_onesignal_subscription_id'),text=bv(i,'text').trim(),date=bv(i,'date'),time=bv(i,'time'),sendAt=aiLocalISO(date,time);if(!subscriptionId)throw new Error('Спочатку увімкни Push');if(!text||!time||!sendAt||new Date(sendAt)<=new Date())throw new Error(`Дія ${i+1}: уточни майбутній час нагадування`);const r=await fetch(LIFE_PUSH_SERVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscriptionId,title:'LIFE',message:text,sendAt})});const out=await r.json();if(!r.ok||!out.ok)throw new Error(out.error||`Дія ${i+1}: Push не заплановано`);data.reminders=data.reminders||[];data.reminders.push({id:Date.now()+i,text,mode:'time',time,sendAt,enabled:true,lastFire:null,backgroundPush:true});return}
+ throw new Error(`Дія ${i+1} не підтримується`);
+}
+async function confirmAIBatch(batch){
+ const snapshot=JSON.stringify(data);aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю все…';
+ try{for(let i=0;i<batch.actions.length;i++)await applyBatchAction(batch.actions[i],i);localStorage.setItem(KEY,JSON.stringify(data));render();aiSummary.textContent=`✅ Збережено дій: ${batch.actions.length}`;aiFields.innerHTML='';aiConfirmBtn.style.display='none';pendingAI=null}
+ catch(e){data=JSON.parse(snapshot);aiStatus.textContent=String(e.message||e)}finally{aiConfirmBtn.disabled=false;aiConfirmBtn.textContent='Підтвердити'}
+}
 function aiLocalISO(date,time){const d=new Date(`${date}T${time||'09:00'}:00`);if(Number.isNaN(d.getTime()))return null;return d.toISOString()}
 async function confirmAI(){
- if(!pendingAI)return;const a=pendingAI,action=a.action;aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю…';
+ if(!pendingAI)return;if(pendingAI.kind==='batch'){await confirmAIBatch(pendingAI);return}const a=pendingAI,action=a.action;aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю…';
  try{
   if(['expense','income'].includes(action)){
    const amount=+aiAmount.value||0,account=aiAccount.value,cat=aiCategory.value;if(amount<=0)throw new Error('Вкажи суму');
@@ -497,7 +541,7 @@ async function confirmAI(){
   }else if(['borrow_in','lend_out'].includes(action)){
    const amount=+aiAmount.value||0,account=aiAccount.value,person=aiLoanPerson.value.trim();if(amount<=0||!person)throw new Error('Перевір суму та ім’я');const direction=action==='borrow_in'?'i_owe':'owed_to_me';data.debts=data.debts||[];data.debts.push({id:Date.now(),n:person,type:direction==='i_owe'?'Борг':'Мені винні',direction,currency:a.currency||accCurrency(account),original:amount,payments:[]});data.accounts[account]=(data.accounts[account]||0)+(action==='borrow_in'?amount:-amount);data.tx.unshift({type:action,amount,account,owner:'Особисте',cat:action==='borrow_in'?'Позичені кошти':'Мені винні',note:a.summary||person,date:new Date().toISOString()});
   }else if(action==='debt_payment'){
-   const d=data.debts.find(x=>x.n===aiTarget.value),amount=+aiAmount.value||0;if(!d||amount<=0)throw new Error('Перевір борг і суму');d.payments=d.payments||[];d.payments.push({id:Date.now(),amount:Math.min(amount,remain(d)),date:new Date().toISOString()});
+   const d=data.debts.find(x=>x.n===aiTarget.value),amount=+aiAmount.value||0,account=aiAccount.value;if(!d||amount<=0)throw new Error('Перевір борг і суму');const applied=Math.min(amount,remain(d));d.payments=d.payments||[];d.payments.push({id:Date.now(),amount:applied,date:new Date().toISOString(),account});data.accounts[account]=(data.accounts[account]||0)+(d.direction==='owed_to_me'?applied:-applied);data.tx.unshift({type:'debt_payment',amount:applied,account,owner:'Особисте',cat:d.direction==='owed_to_me'?'Повернення боргу мені':'Погашення боргу',note:d.n,date:new Date().toISOString()});
   }else if(['saving_add','saving_remove'].includes(action)){
    const g=data.savingGoals.find(x=>x.n===aiTarget.value),amount=+aiAmount.value||0;if(!g||amount<=0)throw new Error('Перевір ціль і суму');g.moves=g.moves||[];g.moves.push({id:Date.now(),type:action==='saving_remove'?'remove':'add',amount,date:new Date().toISOString()});
   }else if(action==='reminder'){

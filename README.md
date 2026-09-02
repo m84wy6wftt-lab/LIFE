@@ -1,3 +1,9 @@
-# LIFE v25 AI Voice
+# LIFE v26 Voice Intelligence
 
-Голос LIFE AI тепер записується через мікрофон iPhone і надсилається на захищений Cloudflare Worker для транскрипції OpenAI. Ключі не зберігаються в GitHub або LIFE. Збережено LIFE_V10, фінанси, категорії, юридичні послуги, Push та AI.
+- High-accuracy voice transcription with contextual LIFE vocabulary
+- Ukrainian + Russian + surzhyk input
+- Long voice messages
+- Multiple actions from one voice/text message
+- Batch review and one final confirmation
+- Debt repayment now updates the selected account according to debt direction
+- Preserves v25 Push, OneSignal, finance data, categories and `LIFE_V10` localStorage
