@@ -283,11 +283,35 @@ function openReminder(){
   reminderModeChanged(); updatePushState(); reminderModal.classList.add('on');
 }
 function reminderModeChanged(){reminderTime.style.display=reminderMode.value==='time'?'block':'none'}
-function saveReminder(){
+const LIFE_PUSH_SERVER='https://life-push-server.m84wy6wftt.workers.dev';
+function nextReminderISO(time){
+  const [h,m]=(time||'09:00').split(':').map(Number);
+  const d=new Date(); d.setHours(h,m,0,0);
+  if(d<=new Date()) d.setDate(d.getDate()+1);
+  const pad=n=>String(n).padStart(2,'0');
+  const off=-d.getTimezoneOffset(), sign=off>=0?'+':'-', oh=pad(Math.floor(Math.abs(off)/60)), om=pad(Math.abs(off)%60);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00${sign}${oh}:${om}`;
+}
+async function saveReminder(){
   const t=reminderText.value.trim(); if(!t)return alert('Вкажи текст нагадування');
-  data.reminders=data.reminders||[];
-  data.reminders.push({id:Date.now(),text:t,mode:reminderMode.value,time:reminderTime.value||'09:00',enabled:true,lastFire:null});
-  closeAll();persist();scheduleLocalChecks();
+  const mode=reminderMode.value, time=reminderTime.value||'09:00';
+  if(mode==='hourly') return alert('Щогодинні фонові Push підключимо наступним кроком. Зараз обери «У вибраний час».');
+  const subscriptionId=localStorage.getItem('life_onesignal_subscription_id');
+  if(!subscriptionId) return alert('Спочатку натисни «Увімкнути сповіщення» і дочекайся OneSignal: підписка ✅');
+  const sendAt=nextReminderISO(time);
+  const btn=event && event.target; if(btn){btn.disabled=true;btn.textContent='Зберігаю…'}
+  try{
+    const r=await fetch(LIFE_PUSH_SERVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscriptionId,title:'LIFE',message:t,sendAt})});
+    const result=await r.json();
+    if(!r.ok || !result.ok) throw new Error((result.onesignal&&JSON.stringify(result.onesignal))||result.error||('HTTP '+r.status));
+    data.reminders=data.reminders||[];
+    data.reminders.push({id:Date.now(),text:t,mode,time,sendAt,enabled:true,lastFire:null,backgroundPush:true});
+    persist(); closeAll();
+    alert('✅ Нагадування збережено. Push прийде у вибраний час, навіть якщо LIFE закритий.');
+  }catch(e){
+    console.error('LIFE scheduled push error',e);
+    alert('Не вдалося запланувати Push. '+String(e.message||e).slice(0,160));
+  }finally{if(btn){btn.disabled=false;btn.textContent='Зберегти'}}
 }
 function removeReminder(id){data.reminders=(data.reminders||[]).filter(x=>x.id!==id);persist()}
 async function requestPushPermission(){
