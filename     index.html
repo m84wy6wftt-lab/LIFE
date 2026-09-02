@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#090b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LIFE">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>LIFE</title>
+<style>
+:root{--bg:#090b0e;--card:#14171b;--line:#272c33;--text:#f5f7f8;--muted:#8f969f;--accent:#d8ff5f;--danger:#ff6b6b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg)}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overscroll-behavior:none}.app{min-height:100dvh}
+button,input,select{font:inherit}.app{max-width:520px;margin:auto;min-height:100dvh;padding:calc(18px + env(safe-area-inset-top)) 16px calc(108px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between}.logo{font-size:32px;font-weight:900}.accent{color:var(--accent)}
+.muted{color:var(--muted)}.title{font-size:28px;font-weight:850;margin:18px 0 4px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.big{font-size:30px;font-weight:900}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #22272e}.row:last-child{border:0}
+.btn,.btn2{border-radius:14px;padding:12px 14px;font-weight:800}.btn{background:var(--accent);border:0;color:#101214}.btn2{background:#1a1e23;border:1px solid #30363e;color:white}
+.icon{width:42px;height:42px;border-radius:14px;border:1px solid #30363e;background:#171a1f;color:white}
+.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#101318ef;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:20}
+.nav button{border:0;background:none;color:#747c86;font-size:10px}.nav b{display:block;font-size:20px}.nav .on{color:var(--accent)}
+.page{display:none}.page.on{display:block}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick button{min-height:74px;text-align:left}
+input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e;background:#1a1e23;color:white;margin:5px 0}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;align-items:flex-end}.modal.on{display:flex}.sheet{width:min(520px,100%);margin:auto;background:#111419;border-radius:26px 26px 0 0;padding:20px 16px 30px;max-height:90vh;overflow:auto}
+.fab{position:fixed;right:max(18px,calc((100vw - 520px)/2 + 18px));bottom:96px;width:58px;height:58px;border-radius:18px;font-size:27px;z-index:30}
+.progress{height:8px;background:#292e34;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--accent)}
+.done{opacity:.45;text-decoration:line-through}.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;border:1px solid #30363e;background:#171a1f;color:#c8cdd3;border-radius:999px;padding:8px 11px}.chip.on{border-color:var(--accent);color:var(--accent)}
+.badge{display:inline-block;border-radius:999px;background:#22272d;padding:5px 8px;font-size:12px}.danger{color:var(--danger)}
+.stat{font-size:13px}.split{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.split .card{margin:0;padding:12px}
+.install{display:none;background:#1a1e23;border:1px solid #323841;padding:12px;border-radius:16px;margin:12px 0}.install.show{display:block}
+</style>
+<style>
+.bar{height:8px;background:#292e34;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.kpi{font-size:22px;font-weight:850}.mini{font-size:12px;color:var(--muted)}
+.catline{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #22272e}
+.catline:last-child{border:0}.limitbad{color:var(--danger)}.okbad{color:var(--accent)}
+</style>
+<style id="v11-compact-ui">
+/* LIFE v11 — compact iPhone UI */
+.app{padding:calc(12px + env(safe-area-inset-top)) 14px calc(86px + env(safe-area-inset-bottom))}
+.logo{font-size:27px}.title{font-size:23px;margin:14px 0 2px}.top .muted{font-size:9px!important;letter-spacing:1.5px!important}
+.card{border-radius:18px;padding:13px;margin:9px 0}.big{font-size:27px}.grid{gap:8px}
+.row{padding:9px 0}.btn,.btn2{border-radius:12px;padding:10px 12px}.icon{width:38px;height:38px;border-radius:13px}
+.quick{gap:8px}.quick button{min-height:54px;font-size:14px}.badge{padding:4px 7px;font-size:11px}
+input,select{padding:10px;border-radius:11px}.sheet{padding:16px 14px 24px;border-radius:22px 22px 0 0}
+.nav{padding:6px 3px calc(6px + env(safe-area-inset-bottom))}.nav button{font-size:9px}.nav b{font-size:18px;margin-bottom:1px}
+.fab{right:max(14px,calc((100vw - 520px)/2 + 14px));bottom:82px;width:50px;height:50px;border-radius:16px;font-size:23px}
+.split{gap:7px}.split .card{padding:10px}.kpi{font-size:19px}.stat{font-size:11px}.mini{font-size:11px}
+.tabs{gap:6px}.chip{padding:7px 9px;font-size:12px}.catline{padding:8px 0}
+#home>.muted,#finance>.muted,#shopping>.muted,#plans>.muted,#assets>.muted{font-size:14px}
+#home .card:first-of-type{padding:14px 15px}#home .card:first-of-type .big{font-size:28px}
+#home .grid .card{min-height:82px}#home .grid .card b{font-size:17px}
+#home .quick{margin-top:9px!important}
+.progress,.bar{height:6px}
+@media (max-width:390px){.app{padding-left:12px;padding-right:12px}.title{font-size:22px}.card{padding:12px}.big{font-size:25px}.quick button{min-height:50px;padding:9px 10px}}
+</style>
+
+<style id="v12-polish">
+/* LIFE v12 — tighter native-like iPhone layout */
+.app{padding:calc(10px + env(safe-area-inset-top)) 13px calc(82px + env(safe-area-inset-bottom))}
+.logo{font-size:25px}.title{font-size:21px;margin:12px 0 1px}.card{padding:11px 12px;margin:8px 0;border-radius:17px}
+.big{font-size:25px}.grid{gap:7px}.row{padding:8px 0}.quick{gap:7px}.quick button{min-height:47px;padding:8px 10px;font-size:13px}
+#home .card:first-of-type{padding:11px 13px}#home .card:first-of-type .big{font-size:26px;line-height:1.08;margin:2px 0}
+#home .grid .card{min-height:68px}#home .grid .card b{font-size:16px}
+#home .quick{margin-top:7px!important}.badge{font-size:10px;padding:4px 7px}
+.nav{padding:5px 3px calc(5px + env(safe-area-inset-bottom))}.nav button{font-size:9px}.nav b{font-size:17px}
+.fab{right:max(13px,calc((100vw - 520px)/2 + 13px));bottom:calc(66px + env(safe-area-inset-bottom));width:46px;height:46px;border-radius:15px;font-size:21px;box-shadow:0 8px 24px #0008}
+.install{padding:10px;border-radius:15px;margin:9px 0}.install.show{margin-bottom:10px}
+@media (max-width:390px){.app{padding-left:11px;padding-right:11px}.title{font-size:20px}.card{padding:10px 11px}.quick button{min-height:45px}}
+</style>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+window.LIFEOneSignal = null;
+window.LIFEOneSignalReady = false;
+
+function lifeOneSignalSnapshot(){
+  const os = window.LIFEOneSignal;
+  if(!os) return {ready:false, permission: Notification.permission, optedIn:false, id:null, token:null};
+  const ps = os.User.PushSubscription;
+  return {
+    ready:true,
+    permission: Notification.permission,
+    optedIn: !!ps.optedIn,
+    id: ps.id || null,
+    token: ps.token || null
+  };
+}
+
+function renderOneSignalStatus(){
+  const el=document.getElementById('pushState');
+  if(!el) return;
+  const x=lifeOneSignalSnapshot();
+  const perm=x.permission==='granted'?'✅':'❌';
+  const sub=(x.optedIn && x.id && !String(x.id).startsWith('local-'))?'✅':'❌';
+  const shortId=x.id ? String(x.id).slice(0,8)+'…'+String(x.id).slice(-6) : 'ще немає';
+  el.innerHTML='iPhone: дозвіл '+perm+'<br>OneSignal: підписка '+sub+'<br>Subscription ID: '+shortId;
+}
+
+window.OneSignalDeferred.push(async function(OneSignal) {
+  try {
+    await OneSignal.init({
+      appId: "be448e27-083e-41b3-8235-1eab1e38e977",
+      safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
+      serviceWorkerPath: "LIFE/sw.js",
+      serviceWorkerParam: { scope: "/LIFE/" }
+    });
+    window.LIFEOneSignal=OneSignal;
+    window.LIFEOneSignalReady=true;
+
+    const reportSubscription = () => {
+      const ps=OneSignal.User.PushSubscription;
+      const id=ps.id;
+      if(id && !String(id).startsWith('local-')) localStorage.setItem('life_onesignal_subscription_id',id);
+      renderOneSignalStatus();
+    };
+    OneSignal.User.PushSubscription.addEventListener('change', reportSubscription);
+    OneSignal.Notifications.addEventListener('permissionChange', reportSubscription);
+    reportSubscription();
+
+    // If iOS permission was already granted in the previous build but OneSignal
+    // never completed the subscription, explicitly finish the opt-in now.
+    if(Notification.permission==='granted' && !OneSignal.User.PushSubscription.optedIn){
+      await OneSignal.User.PushSubscription.optIn();
+      reportSubscription();
+    }
+  } catch (err) {
+    console.error('LIFE OneSignal init error', err);
+    const el=document.getElementById('pushState');
+    if(el) el.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: помилка підключення ❌';
+  }
+});
+</script>
+
+
+</head>
+<body>
+<main class="app">
+<div class="top"><div><div class="muted" style="font-size:11px;letter-spacing:1.8px">PERSONAL LIFE SYSTEM</div><div class="logo">LIFE<span class="accent">.</span></div></div><button class="icon" onclick="openSettings()">⚙︎</button></div>
+<div id="installBox" class="install"><b>Встановити LIFE на iPhone</b><div class="muted" style="margin-top:5px">У Safari натисни «Поділитися» → «На початковий екран».</div></div>
+
+<section id="home" class="page on">
+<div class="title">Привіт, Влад 👋</div><div class="muted">Ось що відбувається сьогодні</div>
+<div class="card"><div class="muted">Загальний баланс</div><div class="big" id="homeBalance">0 ₴</div><div class="badge" id="homeNet">0 ₴ цього місяця</div></div>
+<div class="grid"><div class="card"><div class="muted">Витрати</div><b id="homeExpense">0 ₴</b></div><div class="card"><div class="muted">Крипто</div><b id="cryptoTotal">$0</b><div class="accent">портфель</div></div></div>
+<div class="card"><b>Швидкі дії</b><div class="quick" style="margin-top:12px"><button class="btn2" onclick="openFinance('expense')">− Витрата</button><button class="btn2" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="showPage('shopping')">🛒 Покупка</button><button class="btn2" onclick="showPage('plans')">✓ Задача</button></div></div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div><b>Нагадування</b><div class="muted">Push на iPhone</div></div>
+    <button class="btn2" onclick="openReminder()">＋ Додати</button>
+  </div>
+  <div id="reminderPreview" style="margin-top:8px"></div>
+</div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Спільний простір</b><span class="badge">Влад + Ніка</span></div><div class="muted" style="margin-top:7px">Покупки, задачі та спільні фінанси підготовлені до синхронізації між двома телефонами.</div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Накопичення</b><span id="savingText">0 ₴ / 0 ₴</span></div><div class="progress" style="margin-top:10px"><i id="savingProgress" style="width:0%"></i></div></div>
+</section>
+
+<section id="finance" class="page">
+<div class="title">Фінанси</div><div class="muted">Рахунки, операції, ліміти та борги</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center"><b>Аналітика місяця</b><select id="monthFilter" style="width:auto;padding:8px 10px;margin:0" onchange="render()"></select></div>
+  <div class="grid" style="margin-top:12px">
+    <div><div class="mini">Доходи</div><div class="kpi accent" id="monthIncome">0 ₴</div></div>
+    <div><div class="mini">Витрати</div><div class="kpi" id="monthExpense">0 ₴</div></div>
+  </div>
+  <div id="categoryAnalytics" style="margin-top:12px"></div>
+</div>
+
+<div class="card"><div class="muted">Баланс</div><div class="big" id="balance">0 ₴</div><div id="net" class="accent">0 ₴ за місяць</div></div>
+<div class="split"><div class="card"><div class="muted stat">Готівка</div><b id="cashBal">0 ₴</b></div><div class="card"><div class="muted stat">Картка</div><b id="cardBal">0 ₴</b></div><div class="card"><div class="muted stat">Спільні</div><b id="sharedBal">0 ₴</b></div></div>
+<div class="grid" style="margin-top:12px"><button class="btn" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="openFinance('expense')">− Витрата</button></div>
+<div class="card"><b>Операції</b><div id="transactions"></div></div>
+<div class="card"><b>Борги</b><div id="debts"></div><button class="btn2" style="width:100%;margin-top:8px" onclick="openDebt()">＋ Додати борг</button></div>
+</section>
+
+<section id="shopping" class="page">
+<div class="title">Покупки</div><div class="muted">Особисті та спільні списки</div>
+<div class="tabs"><button class="chip on">Спільні</button><button class="chip">Мої</button><button class="chip">Ніки</button></div>
+<div class="card"><div style="display:flex;gap:8px"><input id="shopInput" placeholder="Що купити?"><input id="shopQty" value="1" style="max-width:70px" inputmode="numeric"><button class="btn" onclick="addShop()">＋</button></div><div id="shops"></div></div>
+</section>
+
+<section id="plans" class="page">
+<div class="title">Плани</div><div class="muted">Задачі, час та повторення</div>
+<div class="card"><input id="taskInput" placeholder="Нова задача"><div style="display:flex;gap:8px"><input id="taskTime" type="time"><select id="taskRepeat"><option>Не повторювати</option><option>Щодня</option><option>Щотижня</option><option>Щомісяця</option></select></div><button class="btn" style="width:100%" onclick="addTask()">Додати задачу</button><div id="tasks"></div></div>
+</section>
+
+<section id="assets" class="page">
+<div class="title">Активи</div><div class="muted">Криптопортфель та накопичення</div>
+
+<div class="card">
+  <div class="muted">Вартість портфеля</div>
+  <div class="big" id="assetTotal">$0</div>
+  <div class="muted" id="marketUpdated">Курси ще не оновлено</div>
+</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b>Курси валют</b><button class="btn2" onclick="refreshMarkets()">↻ Оновити</button>
+  </div>
+  <div class="row"><span>USD / UAH</span><b id="usdUah">—</b></div>
+  <div class="row"><span>EUR / UAH</span><b id="eurUah">—</b></div>
+  <div class="row"><span>EUR / USD</span><b id="eurUsd">—</b></div>
+</div>
+
+<div class="card"><b>Монети</b><div id="coins"></div><button class="btn2" style="width:100%;margin-top:8px" onclick="openCoin()">＋ Додати / змінити</button></div>
+<div class="card"><b>Накопичення</b><input id="saveCurrent" type="number" placeholder="Накопичено"><input id="saveGoal" type="number" placeholder="Ціль"><button class="btn" style="width:100%" onclick="saveSavings()">Зберегти</button></div>
+</section>
+</main>
+
+<button class="btn fab" onclick="quickAdd()">＋</button>
+<nav class="nav"><button class="on" data-p="home" onclick="showPage('home',this)"><b>⌂</b>Головна</button><button data-p="finance" onclick="showPage('finance',this)"><b>₴</b>Фінанси</button><button data-p="shopping" onclick="showPage('shopping',this)"><b>🛒</b>Покупки</button><button data-p="plans" onclick="showPage('plans',this)"><b>✓</b>Плани</button><button data-p="assets" onclick="showPage('assets',this)"><b>₿</b>Активи</button></nav>
+
+<div id="financeModal" class="modal"><div class="sheet"><h2 id="fmTitle">Операція</h2><select id="ftype"><option value="expense">Витрата</option><option value="income">Дохід</option></select><input id="famount" type="number" placeholder="Сума"><select id="faccount"><option>Картка</option><option>Готівка</option><option>Спільний рахунок</option></select><select id="fowner"><option>Влад</option><option>Ніка</option><option>Спільне</option></select><select id="fcat"></select><input id="fnote" placeholder="Коментар"><button class="btn" style="width:100%" onclick="saveFinance()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+<div id="debtModal" class="modal"><div class="sheet"><h2>Новий борг</h2><input id="debtName" placeholder="Назва"><input id="debtAmount" type="number" placeholder="Сума"><button class="btn" style="width:100%" onclick="saveDebt()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+<div id="coinModal" class="modal"><div class="sheet"><h2>Актив</h2><select id="coinName"></select><input id="coinQty" type="number" step="any" placeholder="Кількість"><input id="coinPrice" type="number" step="any" placeholder="Ціна $"><button class="btn" style="width:100%" onclick="saveCoin()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+
+<div id="reminderModal" class="modal"><div class="sheet">
+<h2>Нагадування</h2>
+<input id="reminderText" placeholder="Що нагадати?">
+<select id="reminderMode" onchange="reminderModeChanged()">
+  <option value="time">У вибраний час</option>
+  <option value="hourly">Щогодини</option>
+</select>
+<input id="reminderTime" type="time" value="09:00">
+<button class="btn" style="width:100%" onclick="saveReminder(event)">Зберегти</button>
+<button class="btn2" style="width:100%;margin-top:8px" onclick="requestPushPermission()">Увімкнути сповіщення</button>
+<div class="muted" id="pushState" style="margin-top:10px"></div>
+<button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
+</div></div>
+<div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування</h2><input id="nameInput" placeholder="Твоє ім'я"><input id="partnerInput" placeholder="Партнер"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
+<div class="card"><b>Категорії та ліміти</b><div class="muted" style="margin:5px 0 10px">Ліміт — максимальна сума витрат на місяць.</div><div id="categorySettings"></div>
+<div style="display:flex;gap:8px;margin-top:10px"><input id="newCategoryName" placeholder="Нова категорія"><input id="newCategoryLimit" type="number" placeholder="Ліміт" style="max-width:110px"><button class="btn" onclick="addCategory()">＋</button></div>
+</div>
+<div class="card"><b>Влад + Ніка</b>
+<div class="muted">Кожна фінансова операція тепер має власника: Влад, Ніка або Спільне. Це база для майбутньої синхронізації двох телефонів.</div>
+</div>
+<div class="card"><b>Резервна копія</b>
+<div class="muted" style="margin-bottom:10px">Можна зберегти всі дані LIFE у файл і відновити їх пізніше.</div>
+<div class="grid"><button class="btn2" onclick="exportLife()">Експорт</button><button class="btn2" onclick="document.getElementById('importFile').click()">Імпорт</button></div>
+<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importLife(this.files[0])">
+<button class="btn2 danger" style="width:100%;margin-top:10px" onclick="resetLife()">Скинути тестові дані</button>
+</div><button class="btn" style="width:100%" onclick="saveSettings()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button></div></div>
+
+<script>
+const KEY='LIFE_V10';
+const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':42680,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[{n:'Кредитна картка',a:50000}],savings:{current:86200,goal:139000},reminders:[],fx:{usd:0,eur:0,updated:null},coins:{TAO:{q:1,p:1420},BNB:{q:1,p:920},LINK:{q:1,p:610},AVAX:{q:1,p:410},ICP:{q:1,p:318},AAVE:{q:0,p:0},ENA:{q:0,p:0},TRUMP:{q:0,p:0},DEXE:{q:0,p:0},APT:{q:0,p:0},ADA:{q:0,p:0},USDT:{q:0,p:1}}};
+let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
+
+const coinList=['ADA','BNB','USDT','TAO','LINK','AVAX','ICP','AAVE','ENA','TRUMP','DEXE','APT'];
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function money(n){return Math.round(n).toLocaleString('uk-UA')+' ₴'}
+function showPage(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.p===id));scrollTo(0,0)}
+function closeAll(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('on'))}
+function openFinance(type){fowner.options[0].text=data.profile.name;fowner.options[0].value=data.profile.name;fowner.options[1].text=data.profile.partner;fowner.options[1].value=data.profile.partner;ftype.value=type;fmTitle.textContent=type==='income'?'Додати дохід':'Додати витрату';financeModal.classList.add('on')}
+function saveFinance(){const a=+famount.value;if(!a)return;const acc=faccount.value;data.tx.unshift({type:ftype.value,amount:a,account:acc,owner:fowner.value,cat:fcat.value,note:fnote.value||fcat.value,date:new Date().toISOString()});data.accounts[acc]=(data.accounts[acc]||0)+(ftype.value==='income'?a:-a);famount.value='';fnote.value='';closeAll();persist()}
+function addShop(){const v=shopInput.value.trim();if(!v)return;data.shops.unshift({n:v,q:+shopQty.value||1,d:false});shopInput.value='';shopQty.value='1';persist()}
+function addTask(){const v=taskInput.value.trim();if(!v)return;data.tasks.unshift({n:v,t:taskTime.value||'—',r:taskRepeat.value,d:false});taskInput.value='';persist()}
+function toggleShop(i){data.shops[i].d=!data.shops[i].d;persist()} function toggleTask(i){data.tasks[i].d=!data.tasks[i].d;persist()}
+function delTx(i){const x=data.tx[i];if(x){data.accounts[x.account]=(data.accounts[x.account]||0)+(x.type==='income'?-x.amount:x.amount);data.tx.splice(i,1);persist()}}
+function openDebt(){debtModal.classList.add('on')} function saveDebt(){if(!debtName.value.trim()||!+debtAmount.value)return;data.debts.push({n:debtName.value.trim(),a:+debtAmount.value});debtName.value='';debtAmount.value='';closeAll();persist()}
+function openCoin(){coinModal.classList.add('on')} function saveCoin(){data.coins[coinName.value]={q:+coinQty.value||0,p:+coinPrice.value||0};closeAll();persist()}
+function saveSavings(){data.savings={current:+saveCurrent.value||0,goal:+saveGoal.value||0};persist()}
+function openSettings(){nameInput.value=data.profile.name;partnerInput.value=data.profile.partner;currencyInput.value=data.profile.currency;renderCategorySettings();settingsModal.classList.add('on')}
+function saveSettings(){data.profile={name:nameInput.value||'Влад',partner:partnerInput.value||'Ніка',currency:currencyInput.value};closeAll();persist()}
+
+function monthKey(d){const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')}
+function monthLabel(k){const [y,m]=k.split('-');return new Date(+y,+m-1,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'})}
+function refreshCategorySelect(){fcat.innerHTML=Object.keys(data.categories).map(x=>`<option>${x}</option>`).join('')}
+function renderCategorySettings(){
+  categorySettings.innerHTML=Object.entries(data.categories).map(([n,l])=>`<div class="catline"><div><b>${n}</b><div class="mini">Ліміт: ${l?money(l):'без ліміту'}</div></div><button class="btn2" onclick="editCategory('${n.replace(/'/g,"\\'")}')">Змінити</button></div>`).join('');
+}
+function addCategory(){const n=newCategoryName.value.trim();if(!n)return;data.categories[n]=+newCategoryLimit.value||0;newCategoryName.value='';newCategoryLimit.value='';refreshCategorySelect();renderCategorySettings();persist()}
+function editCategory(old){const nn=prompt('Назва категорії',old);if(!nn)return;const lim=+prompt('Місячний ліміт, ₴',data.categories[old]||0)||0;if(nn!==old){data.categories[nn]=lim;delete data.categories[old];data.tx.forEach(t=>{if(t.cat===old)t.cat=nn})}else data.categories[old]=lim;refreshCategorySelect();renderCategorySettings();persist()}
+
+
+function openReminder(){
+  reminderText.value=''; reminderMode.value='time'; reminderTime.value='09:00';
+  reminderModeChanged(); updatePushState(); reminderModal.classList.add('on');
+}
+function reminderModeChanged(){reminderTime.style.display=reminderMode.value==='time'?'block':'none'}
+const LIFE_PUSH_SERVER='https://life-push-server.m84wy6wftt.workers.dev';
+function nextReminderISO(time){
+  const [h,m]=(time||'09:00').split(':').map(Number);
+  const d=new Date();
+  d.setHours(h,m,0,0);
+  if(d<=new Date()) d.setDate(d.getDate()+1);
+  // Send an unambiguous UTC RFC3339 timestamp to the backend/OneSignal.
+  return d.toISOString();
+}
+
+async function saveReminder(ev){
+  const t=reminderText.value.trim();
+  if(!t) return alert('Вкажи текст нагадування');
+
+  const mode=reminderMode.value;
+  const time=reminderTime.value||'09:00';
+
+  if(mode==='hourly'){
+    return alert('Щогодинні фонові Push підключимо наступним кроком. Зараз обери «У вибраний час».');
+  }
+
+  let subscriptionId=localStorage.getItem('life_onesignal_subscription_id');
+  if(window.LIFEOneSignal){
+    const liveId=window.LIFEOneSignal.User.PushSubscription.id;
+    if(liveId && !String(liveId).startsWith('local-')){
+      subscriptionId=liveId;
+      localStorage.setItem('life_onesignal_subscription_id',liveId);
+    }
+  }
+  if(!subscriptionId){
+    return alert('Спочатку натисни «Увімкнути сповіщення» і дочекайся OneSignal: підписка ✅');
+  }
+
+  const sendAt=nextReminderISO(time);
+  const btn=(ev && ev.currentTarget) || null;
+  if(btn){btn.disabled=true;btn.textContent='Планую Push…'}
+
+  try{
+    const r=await fetch(LIFE_PUSH_SERVER,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      cache:'no-store',
+      body:JSON.stringify({
+        subscriptionId,
+        title:'LIFE',
+        message:t,
+        sendAt
+      })
+    });
+
+    const raw=await r.text();
+    let result={};
+    try{ result=raw ? JSON.parse(raw) : {}; }catch(_){ result={raw}; }
+
+    if(!r.ok || !result.ok){
+      throw new Error((result.onesignal&&JSON.stringify(result.onesignal))||result.error||result.raw||('HTTP '+r.status));
+    }
+
+    const notificationId =
+      (result.onesignal && result.onesignal.id) ||
+      result.id ||
+      null;
+
+    data.reminders=data.reminders||[];
+    data.reminders.push({
+      id:Date.now(),
+      text:t,
+      mode,
+      time,
+      sendAt,
+      enabled:true,
+      lastFire:null,
+      backgroundPush:true,
+      notificationId
+    });
+
+    localStorage.setItem(KEY,JSON.stringify(data));
+    render();
+    closeAll();
+
+    alert(
+      '✅ Push заплановано на '+time+
+      '.\n\nМожеш повністю закрити LIFE і заблокувати iPhone.'+
+      (notificationId ? '\nID: '+String(notificationId).slice(0,8)+'…' : '')
+    );
+  }catch(e){
+    console.error('LIFE scheduled push error',e);
+    alert('❌ Push НЕ заплановано.\n'+String(e.message||e).slice(0,220));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Зберегти'}
+  }
+}
+function removeReminder(id){data.reminders=(data.reminders||[]).filter(x=>x.id!==id);persist()}
+async function requestPushPermission(){
+  if(!('Notification' in window)){pushState.textContent='Цей браузер не підтримує Notifications API';return}
+  pushState.innerHTML='Підключаю OneSignal…';
+  try{
+    if(!window.LIFEOneSignal){
+      await new Promise((resolve,reject)=>{
+        let n=0; const t=setInterval(()=>{n++;if(window.LIFEOneSignal){clearInterval(t);resolve()}else if(n>30){clearInterval(t);reject(new Error('OneSignal timeout'))}},200);
+      });
+    }
+    const os=window.LIFEOneSignal;
+    if(Notification.permission!=='granted') await os.Notifications.requestPermission();
+    if(Notification.permission==='granted') await os.User.PushSubscription.optIn();
+    renderOneSignalStatus();
+  }catch(e){
+    console.error('LIFE push opt-in error',e);
+    pushState.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: помилка ❌<br><span style="font-size:13px">'+String(e && (e.message||e)).slice(0,180)+'</span>';
+  }
+}
+function updatePushState(){
+  if(!('Notification' in window)){pushState.textContent='Notifications API недоступний';return}
+  renderOneSignalStatus();
+}
+function fireLocalReminder(r){
+  if(Notification.permission==='granted'){
+    try{new Notification('LIFE',{body:r.text,icon:'./icon.svg'})}catch(e){}
+  }
+}
+function scheduleLocalChecks(){
+  if(window.__lifeReminderTimer)clearInterval(window.__lifeReminderTimer);
+  window.__lifeReminderTimer=setInterval(()=>{
+    const now=new Date(), hh=String(now.getHours()).padStart(2,'0'), mm=String(now.getMinutes()).padStart(2,'0'), key=now.toISOString().slice(0,13)+':'+mm;
+    (data.reminders||[]).filter(r=>r.enabled).forEach(r=>{
+      let due=false;
+      if(r.mode==='time' && r.time===hh+':'+mm) due=true;
+      if(r.mode==='hourly' && mm==='00') due=true;
+      if(due && r.lastFire!==key){r.lastFire=key;fireLocalReminder(r);localStorage.setItem(KEY,JSON.stringify(data))}
+    });
+  },15000);
+}
+async function refreshMarkets(){
+  const symbols=['ADAUSDT','BNBUSDT','TAOUSDT','LINKUSDT','AVAXUSDT','ICPUSDT','AAVEUSDT','ENAUSDT','TRUMPUSDT','DEXEUSDT','APTUSDT'];
+  try{
+    const q=encodeURIComponent(JSON.stringify(symbols));
+    const r=await fetch('https://api.binance.com/api/v3/ticker/price?symbols='+q,{cache:'no-store'});
+    if(!r.ok)throw new Error('Binance '+r.status);
+    const arr=await r.json();
+    for(const x of arr){
+      const c=x.symbol.replace('USDT','');
+      if(data.coins[c])data.coins[c].p=+x.price;
+    }
+  }catch(e){console.warn('Binance update failed',e)}
+  try{
+    const r=await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json',{cache:'no-store'});
+    if(!r.ok)throw new Error('NBU '+r.status);
+    const arr=await r.json();
+    const usd=arr.find(x=>x.cc==='USD'), eur=arr.find(x=>x.cc==='EUR');
+    if(usd&&eur)data.fx={usd:+usd.rate,eur:+eur.rate,updated:new Date().toISOString()};
+  }catch(e){console.warn('NBU update failed',e)}
+  render();localStorage.setItem(KEY,JSON.stringify(data));
+}
+function exportLife(){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='LIFE-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importLife(file){
+ if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.profile||!x.accounts)throw 0;data=x;persist();alert('Дані LIFE відновлено')}catch(e){alert('Не вдалося прочитати резервну копію')}};r.readAsText(file);
+}
+function resetLife(){if(confirm('Скинути всі локальні тестові дані LIFE?')){localStorage.removeItem(KEY);location.reload()}}
+function quickAdd(){const p=document.querySelector('.page.on').id;if(p==='shopping')shopInput.focus();else if(p==='plans')taskInput.focus();else if(p==='assets')openCoin();else openFinance('expense')}
+function render(){
+ const bal=Object.values(data.accounts).reduce((a,b)=>a+b,0), inc=data.tx.filter(x=>x.type==='income').reduce((a,b)=>a+b.amount,0), exp=data.tx.filter(x=>x.type==='expense').reduce((a,b)=>a+b.amount,0), netv=inc-exp;
+ const months=[...new Set([monthKey(new Date()),...data.tx.map(x=>monthKey(x.date))])].sort().reverse();
+ const selected=monthFilter.value||months[0]; monthFilter.innerHTML=months.map(m=>`<option value="${m}" ${m===selected?'selected':''}>${monthLabel(m)}</option>`).join('');
+ const mt=data.tx.filter(x=>monthKey(x.date)===(monthFilter.value||months[0])); const mi=mt.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0), me=mt.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
+ monthIncome.textContent=money(mi); monthExpense.textContent=money(me);
+ const spent={}; mt.filter(x=>x.type==='expense').forEach(x=>spent[x.cat]=(spent[x.cat]||0)+x.amount);
+ categoryAnalytics.innerHTML=Object.entries(spent).sort((a,b)=>b[1]-a[1]).map(([n,v])=>{const lim=data.categories[n]||0,p=lim?Math.min(100,v/lim*100):0;return `<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${n}</span><b class="${lim&&v>lim?'limitbad':'okbad'}">${money(v)}${lim?' / '+money(lim):''}</b></div>${lim?`<div class="bar" style="margin-top:6px"><i style="width:${p}%"></i></div>`:''}</div>`}).join('')||'<div class="muted">Ще немає витрат за цей місяць</div>';
+
+ homeBalance.textContent=balance.textContent=money(bal);homeExpense.textContent=money(exp);homeNet.textContent=(netv>=0?'+':'')+money(netv)+' цього місяця';net.textContent=(netv>=0?'+':'')+money(netv)+' за місяць';
+ cashBal.textContent=money(data.accounts['Готівка']||0);cardBal.textContent=money(data.accounts['Картка']||0);sharedBal.textContent=money(data.accounts['Спільний рахунок']||0);
+ transactions.innerHTML=data.tx.length?data.tx.slice(0,20).map((x,i)=>`<div class="row"><div><b>${x.note}</b><div class="muted">${x.cat} • ${x.account} • ${x.owner||'Влад'}</div></div><div style="text-align:right"><b class="${x.type==='income'?'accent':''}">${x.type==='income'?'+':'−'}${money(x.amount)}</b><div class="muted" onclick="delTx(${i})">видалити</div></div></div>`).join(''):'<div class="muted" style="padding-top:12px">Операцій ще немає</div>';
+ shops.innerHTML=data.shops.map((x,i)=>`<div class="row ${x.d?'done':''}" onclick="toggleShop(${i})"><span>${x.d?'✓':'○'} ${x.n}</span><b>x${x.q}</b></div>`).join('');
+ tasks.innerHTML=data.tasks.map((x,i)=>`<div class="row ${x.d?'done':''}" onclick="toggleTask(${i})"><div><b>${x.d?'✓':'○'} ${x.n}</b><div class="muted">${x.r}</div></div><b>${x.t}</b></div>`).join('');
+ debts.innerHTML=data.debts.map(x=>`<div class="row"><span>${x.n}</span><b>${money(x.a)}</b></div>`).join('');
+ const vals=Object.entries(data.coins).map(([n,v])=>[n,v.q*v.p,v]); const total=vals.reduce((s,x)=>s+x[1],0); assetTotal.textContent=cryptoTotal.textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:2});
+ coins.innerHTML=vals.map(([n,val,v])=>`<div class="row"><div><b>${n}</b><div class="muted">${v.q} × $${v.p}</div></div><b>$${val.toLocaleString('en-US',{maximumFractionDigits:2})}</b></div>`).join('');
+ saveCurrent.value=data.savings.current;saveGoal.value=data.savings.goal; savingText.textContent=money(data.savings.current)+' / '+money(data.savings.goal); savingProgress.style.width=Math.min(100,data.savings.goal?data.savings.current/data.savings.goal*100:0)+'%';
+ 
+ const rs=(data.reminders||[]).filter(x=>x.enabled);
+ reminderPreview.innerHTML=rs.length?rs.slice(0,4).map(r=>`<div class="row"><div><b>${r.text}</b><div class="muted">${r.mode==='hourly'?'Щогодини':r.time}${r.backgroundPush?' • Push заплановано ✅':''}</div></div><span class="danger" onclick="removeReminder(${r.id})">×</span></div>`).join(''):'<div class="muted">Нагадувань ще немає</div>';
+ if(data.fx){
+   usdUah.textContent=data.fx.usd?data.fx.usd.toFixed(4)+' ₴':'—';
+   eurUah.textContent=data.fx.eur?data.fx.eur.toFixed(4)+' ₴':'—';
+   eurUsd.textContent=(data.fx.usd&&data.fx.eur)?(data.fx.eur/data.fx.usd).toFixed(4):'—';
+   marketUpdated.textContent=data.fx.updated?'Оновлено '+new Date(data.fx.updated).toLocaleString('uk-UA'):'Курси ще не оновлено';
+ }
+document.querySelector('#home .title').textContent='Привіт, '+data.profile.name+' 👋';
+}
+refreshCategorySelect(); coinName.innerHTML=coinList.map(x=>`<option>${x}</option>`).join('');
+if(/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) installBox.classList.add('show');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(r=>{r.update().catch(()=>{});}).catch(()=>{});navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('life-sw-reloaded')){sessionStorage.setItem('life-sw-reloaded','1');location.reload();}});}
+render();scheduleLocalChecks();refreshMarkets();setInterval(refreshMarkets,60000);
+</script>
+</body></html>
