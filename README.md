@@ -1,9 +1,10 @@
-# LIFE v26 Voice Intelligence
+# LIFE v27 Premium
 
-- High-accuracy voice transcription with contextual LIFE vocabulary
-- Ukrainian + Russian + surzhyk input
-- Long voice messages
-- Multiple actions from one voice/text message
-- Batch review and one final confirmation
-- Debt repayment now updates the selected account according to debt direction
-- Preserves v25 Push, OneSignal, finance data, categories and `LIFE_V10` localStorage
+- Premium dynamic Home
+- Today overview
+- Horizontal account cards
+- Monthly spending snapshot
+- LIFE AI preserved from v26
+- Voice Intelligence + batch actions preserved
+- Existing `LIFE_V10` data preserved
+- OneSignal background Push preserved

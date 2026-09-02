@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- LIFE v23 — AI assistant -->
+<!-- LIFE v27 — Premium Home + Smart AI UX -->
 <html lang="uk">
 <head>
 <meta charset="utf-8">
@@ -151,6 +151,21 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 </script>
 
 
+<style id="v27-premium">
+:root{--soft:#101318;--soft2:#171b20;--lime:#d8ff5f;--green:#82f7a0;--red:#ff7a7a}
+#home .title,#home>.muted{display:none}
+.home27-head{display:flex;align-items:end;justify-content:space-between;margin:14px 2px 10px}.home27-head h1{margin:0;font-size:27px;letter-spacing:-.6px}.home27-date{font-size:12px;color:var(--muted);margin-top:3px}
+.hero27{background:radial-gradient(circle at 88% 10%,#d8ff5f18,transparent 35%),linear-gradient(145deg,#171b20,#101318);border-color:#30372d;padding:17px!important}.hero27 .label{color:#aab1b8;font-size:12px}.hero27 .available{font-size:34px;font-weight:900;letter-spacing:-1px;margin:3px 0 10px}.hero27-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;border-top:1px solid #272d32;padding-top:10px}.hero27-mini span{display:block;color:var(--muted);font-size:10px}.hero27-mini b{font-size:13px}.pos27{color:var(--green)}.neg27{color:var(--red)}
+.section27{margin:15px 2px 7px;display:flex;justify-content:space-between;align-items:center}.section27 b{font-size:15px}.section27 small{color:var(--muted)}
+.today27{display:grid;grid-template-columns:1fr 1fr;gap:8px}.today27 .mini-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;min-height:72px}.today27 .mini-card span{font-size:11px;color:var(--muted);display:block;margin-bottom:5px}.today27 .mini-card b{font-size:16px}
+.accounts27{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 4px}.accounts27::-webkit-scrollbar{display:none}.account27{min-width:145px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:12px}.account27 .n{font-size:11px;color:var(--muted)}.account27 .v{font-size:18px;font-weight:850;margin-top:4px}.account27 .cur{font-size:10px;color:var(--accent);margin-top:5px}
+.month27{padding:13px!important}.month27-top{display:flex;justify-content:space-between;align-items:end}.month27 .month-total{font-size:22px;font-weight:900}.month27-bars{display:flex;gap:4px;height:48px;align-items:end;margin-top:12px}.month27-bars i{flex:1;min-height:4px;background:#343b42;border-radius:5px}.month27-bars i.hot{background:var(--accent)}.month27-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)}
+.ai27{width:100%;border:1px solid #4b5828;background:linear-gradient(135deg,#20271a,#14181a);border-radius:18px;padding:13px 14px;color:white;display:flex;align-items:center;justify-content:space-between;text-align:left}.ai27 strong{font-size:16px;color:var(--accent)}.ai27 small{display:block;color:#9ea69b;margin-top:2px}.ai27 .orb{width:38px;height:38px;border-radius:13px;background:var(--accent);color:#111;display:grid;place-items:center;font-size:20px}
+.crypto27{display:flex;justify-content:space-between;align-items:center}.crypto27 .val{font-size:21px;font-weight:900}.crypto27 small{color:var(--muted)}
+#home{padding-bottom:8px}.fab{display:none}.nav{border-radius:18px 18px 0 0;box-shadow:0 -10px 35px #0007}.nav button{padding-top:3px}
+.ai-batch-card{padding:10px 11px!important;border-radius:15px!important}.ai-batch-title{font-size:13px!important;margin-bottom:5px!important}.ai-batch-card input,.ai-batch-card select{padding:8px 9px!important;margin:3px 0!important;font-size:13px}.ai-result{padding:10px!important}.ai-actions{position:sticky;bottom:-18px;background:#111419;padding:8px 0 2px;z-index:2}.ai-actions .btn{box-shadow:0 8px 25px #d8ff5f22}
+@media(max-width:380px){.hero27 .available{font-size:31px}.account27{min-width:132px}.today27 .mini-card{padding:10px}}
+</style>
 </head>
 <body>
 <main class="app">
@@ -158,21 +173,15 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="installBox" class="install"><b>Встановити LIFE на iPhone</b><div class="muted" style="margin-top:5px">У Safari натисни «Поділитися» → «На початковий екран».</div></div>
 
 <section id="home" class="page on">
-<div class="title">Привіт, Влад 👋</div><div class="muted">Ось що відбувається сьогодні</div>
-<div class="card"><div class="muted">Загальний баланс</div><div class="big" id="homeBalance">0 ₴</div><div class="badge" id="homeNet">0 ₴ цього місяця</div></div>
-<div class="grid"><div class="card"><div class="muted">Витрати</div><b id="homeExpense">0 ₴</b></div><div class="card"><div class="muted">Крипто</div><b id="cryptoTotal">$0</b><div class="accent">портфель</div></div></div>
-<div class="card"><b>Швидкі дії</b><div class="quick" style="margin-top:12px"><button class="btn2" onclick="openFinance('expense')">− Витрата</button><button class="btn2" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="showPage('shopping')">🛒 Покупка</button><button class="btn2" onclick="showPage('plans')">✓ Задача</button></div></div>
-<div class="card"><button class="btn2 ai-launch" onclick="openAI()"><span><strong>✦ LIFE AI</strong><br><span class="muted">Напиши команду звичайними словами</span></span><span style="font-size:22px">›</span></button></div>
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div><b>Нагадування</b><div class="muted">Push на iPhone</div></div>
-    <button class="btn2" onclick="openReminder()">＋ Додати</button>
-  </div>
-  <div id="reminderPreview" style="margin-top:8px"></div>
-</div>
-
-<div class="card"><div style="display:flex;justify-content:space-between"><b>Накопичення</b><span id="savingText">0 ₴ / 0 ₴</span></div><div class="progress" style="margin-top:10px"><i id="savingProgress" style="width:0%"></i></div></div>
-</section>
+<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v27</span></div>
+<div class="card hero27"><div class="label">Доступно зараз</div><div class="available" id="homeAvailable27">0 ₴</div><div class="hero27-grid"><div class="hero27-mini"><span>На рахунках</span><b id="homeAccounts27">0 ₴</b></div><div class="hero27-mini"><span>За місяць</span><b id="homeMonthNet27">0 ₴</b></div><div class="hero27-mini"><span>Доходи</span><b class="pos27" id="homeIncome27">+0 ₴</b></div><div class="hero27-mini"><span>Витрати</span><b class="neg27" id="homeExpense27">−0 ₴</b></div></div></div>
+<div class="section27"><b>Сьогодні</b><small id="todayLabel27"></small></div>
+<div class="today27"><div class="mini-card"><span>💸 Витрачено сьогодні</span><b id="todayExpense27">0 ₴</b></div><div class="mini-card"><span>✓ Справи</span><b id="todayTasks27">0 / 0</b></div><div class="mini-card"><span>🔔 Найближче</span><b id="todayReminder27">Немає</b></div><div class="mini-card"><span>◎ Накопичення</span><b id="todaySavings27">0 цілей</b></div></div>
+<div class="section27"><b>Рахунки</b><small onclick="showPage('finance')">Усі ›</small></div><div class="accounts27" id="homeAccountsList27"></div>
+<div class="section27"><b>Цей місяць</b><small onclick="showPage('finance')">Аналітика ›</small></div><div class="card month27"><div class="month27-top"><div><small class="muted">Витрати</small><div class="month-total" id="monthSpend27">0 ₴</div></div><div style="text-align:right"><small class="muted">Топ категорія</small><div id="topCat27" style="font-weight:800">—</div></div></div><div class="month27-bars" id="monthBars27"></div><div class="month27-foot"><span>початок</span><span>сьогодні</span></div></div>
+<button class="ai27" onclick="openAI()"><span><strong>✦ LIFE AI</strong><small>Скажи або напиши — я розберу</small></span><span class="orb">🎙</span></button>
+<div class="card crypto27"><div><b>₿ Криптопортфель</b><br><small>Окремо від грошей на життя</small></div><div class="val" id="cryptoTotal">$0</div></div>
+<div style="display:none"><span id="homeBalance"></span><span id="homeExpense"></span><span id="homeNet"></span><span id="savingText"></span><i id="savingProgress"></i><div id="reminderPreview"></div></div></section>
 
 <section id="finance" class="page">
 <div class="title">Фінанси</div><div class="muted">Рахунки, операції, ліміти та борги</div>
@@ -656,6 +665,23 @@ function importLife(file){
 }
 function resetLife(){if(confirm('Скинути всі локальні тестові дані LIFE?')){localStorage.removeItem(KEY);location.reload()}}
 function quickAdd(){const p=document.querySelector('.page.on').id;if(p==='shopping')shopInput.focus();else if(p==='plans')taskInput.focus();else if(p==='assets')openCoin();else openFinance('expense')}
+
+function renderV27(mt,mi,me,accountsUAH,totalCrypto){
+ const now=new Date(),todayKey=now.toISOString().slice(0,10);
+ homeName27.textContent=data.profile.name||'Влад';
+ homeDate27.textContent=now.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
+ todayLabel27.textContent=now.toLocaleDateString('uk-UA',{day:'numeric',month:'short'});
+ homeAvailable27.textContent=money(accountsUAH);homeAccounts27.textContent=money(accountsUAH);
+ homeIncome27.textContent='+'+money(mi);homeExpense27.textContent='−'+money(me);homeMonthNet27.textContent=(mi-me>=0?'+':'')+money(mi-me);homeMonthNet27.className=mi-me>=0?'pos27':'neg27';
+ const te=(data.tx||[]).filter(x=>x.type==='expense'&&String(x.date||'').slice(0,10)===todayKey).reduce((s,x)=>s+(+x.amount||0),0);todayExpense27.textContent=money(te);
+ const ts=data.tasks||[],done=ts.filter(x=>x.d).length;todayTasks27.textContent=done+' / '+ts.length;
+ const rs=(data.reminders||[]).filter(x=>x.enabled).sort((a,b)=>String(a.sendAt||'').localeCompare(String(b.sendAt||'')));todayReminder27.textContent=rs[0]?(rs[0].time||'🔔'):'Немає';
+ todaySavings27.textContent=(data.savingGoals||[]).length+' цілей';
+ const names=Object.keys(data.accounts||{});homeAccountsList27.innerHTML=names.length?names.map(n=>`<div class="account27" onclick="showPage('finance')"><div class="n">${aiEsc(n)}</div><div class="v">${fc(accountCurrent(n),accCurrency(n))}</div><div class="cur">${accCurrency(n)}</div></div>`).join(''):'<div class="account27"><div class="n">Рахунків ще немає</div><div class="v">0 ₴</div><div class="cur">＋ створи у Фінансах</div></div>';
+ monthSpend27.textContent=money(me);const sp={};mt.filter(x=>x.type==='expense').forEach(x=>sp[x.cat]=(sp[x.cat]||0)+(+x.amount||0));const top=Object.entries(sp).sort((a,b)=>b[1]-a[1])[0];topCat27.textContent=top?(top[0].split(' › ').pop()):'—';
+ const day=now.getDate(),days=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();const buckets=Array.from({length:12},()=>0);mt.filter(x=>x.type==='expense').forEach(x=>{const d=new Date(x.date).getDate();buckets[Math.min(11,Math.floor((d-1)/days*12))]+=+x.amount||0});const mx=Math.max(1,...buckets);monthBars27.innerHTML=buckets.map((v,i)=>`<i class="${i<=Math.floor((day-1)/days*12)?'hot':''}" style="height:${Math.max(8,Math.round(v/mx*100))}%"></i>`).join('');
+}
+
 function render(){
  const bal=Object.values(data.accounts).reduce((a,b)=>a+b,0), inc=data.tx.filter(x=>x.type==='income').reduce((a,b)=>a+b.amount,0), exp=data.tx.filter(x=>x.type==='expense').reduce((a,b)=>a+b.amount,0), netv=inc-exp;
  const months=[...new Set([monthKey(new Date()),...data.tx.map(x=>monthKey(x.date))])].sort().reverse();
@@ -683,6 +709,7 @@ debts.innerHTML=(data.debts||[]).length?data.debts.map(d=>{if(!d.id)d.id=Date.no
 const gs=data.savingGoals||[];savingGoals.innerHTML=gs.length?gs.map(g=>{const c=sc(g),pc=g.target?Math.min(100,Math.max(0,c/g.target*100)):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${g.n}</b><div class="mini">${fc(c,g.currency)} / ${fc(g.target,g.currency)}</div></div><b>${Math.round(pc)}%</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openSavingMove(${g.id})">± Змінити</button><button class="btn2 danger" onclick="deleteSavingGoal(${g.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Цілей ще немає</div>';assetSavingGoals.innerHTML=gs.length?gs.map(g=>`<div class="row"><span>${g.n}</span><b>${fc(sc(g),g.currency)}</b></div>`).join(''):'Цілей ще немає';
  const vals=Object.entries(data.coins).map(([n,v])=>[n,v.q*v.p,v]); const total=vals.reduce((s,x)=>s+x[1],0); assetTotal.textContent=cryptoTotal.textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:2});
  coins.innerHTML=vals.map(([n,val,v])=>`<div class="row"><div><b>${n}</b><div class="muted">${v.q} × $${v.p}</div></div><b>$${val.toLocaleString('en-US',{maximumFractionDigits:2})}</b></div>`).join('');
+ renderV27(mt,mi,me,accountsUAH,total);
  savingText.textContent=(data.savingGoals||[]).length+' цілей';savingProgress.style.width='0%';
  
  const rs=(data.reminders||[]).filter(x=>x.enabled);
@@ -693,7 +720,7 @@ const gs=data.savingGoals||[];savingGoals.innerHTML=gs.length?gs.map(g=>{const c
    eurUsd.textContent=(data.fx.usd&&data.fx.eur)?(data.fx.eur/data.fx.usd).toFixed(4):'—';
    marketUpdated.textContent=data.fx.updated?'Оновлено '+new Date(data.fx.updated).toLocaleString('uk-UA'):'Курси ще не оновлено';
  }
-document.querySelector('#home .title').textContent='Привіт, '+data.profile.name+' 👋';
+homeName27.textContent=data.profile.name||'Влад';
 }
 refreshCategorySelect(); coinName.innerHTML=coinList.map(x=>`<option>${x}</option>`).join('');
 if(/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) installBox.classList.add('show');
