@@ -1,3 +1,3 @@
-# LIFE v28.2 Premium System
+# LIFE v29 — Bug Fix + Smart Finance
 
-Bugfix + polish: removed stray literal \n text, corrected version badge, compact Premium Plans composer, Premium crypto portfolio with cost basis and P/L, Smart Finance preserved. Existing LIFE_V10 data, AI, Voice and Push are preserved.
+Premium UI preserved. Fixed stray \n markers and compact Plans composer. Manual debt/receivable payments and savings moves now update the selected account and transaction history. Existing LIFE_V10 data, Push, Voice AI, OneSignal and crypto P/L are preserved.
