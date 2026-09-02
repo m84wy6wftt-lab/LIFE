@@ -4,14 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#090b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LIFE">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon.svg">
 <title>LIFE</title>
 <style>
 :root{--bg:#090b0e;--card:#14171b;--line:#272c33;--text:#f5f7f8;--muted:#8f969f;--accent:#d8ff5f;--danger:#ff6b6b}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,select{font:inherit}.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 108px}
+html,body{min-height:100%;background:var(--bg)}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overscroll-behavior:none}.app{min-height:100dvh}
+button,input,select{font:inherit}.app{max-width:520px;margin:auto;min-height:100dvh;padding:calc(18px + env(safe-area-inset-top)) 16px calc(108px + env(safe-area-inset-bottom))}
 .top{display:flex;align-items:center;justify-content:space-between}.logo{font-size:32px;font-weight:900}.accent{color:var(--accent)}
 .muted{color:var(--muted)}.title{font-size:28px;font-weight:850;margin:18px 0 4px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.big{font-size:30px;font-weight:900}
@@ -144,7 +148,7 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 </div><button class="btn" style="width:100%" onclick="saveSettings()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button></div></div>
 
 <script>
-const KEY='LIFE_V9';
+const KEY='LIFE_V10';
 const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':42680,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[{n:'Кредитна картка',a:50000}],savings:{current:86200,goal:139000},reminders:[],fx:{usd:0,eur:0,updated:null},coins:{TAO:{q:1,p:1420},BNB:{q:1,p:920},LINK:{q:1,p:610},AVAX:{q:1,p:410},ICP:{q:1,p:318},AAVE:{q:0,p:0},ENA:{q:0,p:0},TRUMP:{q:0,p:0},DEXE:{q:0,p:0},APT:{q:0,p:0},ADA:{q:0,p:0},USDT:{q:0,p:1}}};
 let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
 
