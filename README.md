@@ -1,2 +1,2 @@
-LIFE v20.3 — exact zero-balance migration.
-Resets legacy object balances: Картка, Готівка, Спільний рахунок. Other LIFE data preserved.
+LIFE v21 — Finance Core
+Custom UAH/USD/EUR accounts; income/expense changes selected account; same-currency transfers; editable categories and limits. Existing crypto, debts, savings and Push preserved.
