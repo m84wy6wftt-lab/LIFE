@@ -251,8 +251,19 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 
 <script>
 const KEY='LIFE_V10';
-const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':42680,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[],savings:{current:0,goal:0},savingGoals:[],reminders:[],fx:{usd:0,eur:0,updated:null},coins:{ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}}};
+const base={profile:{name:'Влад',partner:'Ніка',currency:'UAH'},categories:{'Їжа':12000,'Кава':3000,'Транспорт':5000,'Авто':8000,'Дім':5000,'Комунальні':5000,'Покупки':7000,'Розваги':5000,'Здоров’я':3000,'Зарплата':0,'Накопичення':0,'Інше':3000},accounts:{'Картка':0,'Готівка':0,'Спільний рахунок':0},tx:[],shops:[{n:'Молоко',q:1,d:false},{n:'Кава',q:1,d:false},{n:'Корм для кота',q:1,d:false}],tasks:[{n:'Забрати замовлення',t:'15:30',r:'Не повторювати',d:false},{n:'Заправити Infiniti',t:'18:00',r:'Не повторювати',d:false}],debts:[],savings:{current:0,goal:0},savingGoals:[],reminders:[],fx:{usd:0,eur:0,updated:null},coins:{ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}}};
 let data;try{data=Object.assign({},base,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){data=base}
+// LIFE v20.3 exact migration: reset the old account-object balances once.
+if(!localStorage.getItem('LIFE_V20_3_ZERO_OLD_ACCOUNT_OBJECT')){
+  if(data.accounts && !Array.isArray(data.accounts) && typeof data.accounts==='object'){
+    data.accounts['Картка']=0;
+    data.accounts['Готівка']=0;
+    data.accounts['Спільний рахунок']=0;
+  }
+  localStorage.setItem('LIFE_V20_3_ZERO_OLD_ACCOUNT_OBJECT','1');
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
+
 if(!localStorage.getItem('LIFE_V19_MIGRATED')){if((data.debts||[]).length===1&&data.debts[0].n==='Кредитна картка'&&+data.debts[0].a===50000)data.debts=[];data.savings={current:0,goal:0};data.savingGoals=[];data.coins={ETH:{q:0.49890782,p:0},SOL:{q:3.12897587,p:0},XRP:{q:191.80403467,p:0},BTC:{q:0.00158858,p:0},TAO:{q:0.47637536,p:0},LINK:{q:4.66583012,p:0},ENA:{q:162.41538782,p:0},AAVE:{q:0.18300001,p:0},ICP:{q:9.24075,p:0},AVAX:{q:2.7974506,p:0},BNB:{q:0.00973013,p:0},ADA:{q:0.00000368,p:0}};localStorage.setItem('LIFE_V19_MIGRATED','1');localStorage.setItem(KEY,JSON.stringify(data));}
 data.savingGoals=data.savingGoals||[];
 // LIFE v19.1: one-time clean start for the legacy debt list requested by the user.
