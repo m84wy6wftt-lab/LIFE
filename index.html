@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- LIFE v21 — Finance Core -->
+<!-- LIFE v22 — editable finance history -->
 <html lang="uk">
 <head>
 <meta charset="utf-8">
@@ -221,6 +221,13 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="accountModal" class="modal"><div class="sheet"><h2>Новий рахунок</h2><input id="accountName" placeholder="Наприклад: Monobank або Готівка"><div style="display:flex;gap:8px"><input id="accountBalance" type="number" step="any" placeholder="Початковий баланс"><select id="accountCurrency" style="max-width:105px"><option value="UAH">₴ UAH</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option></select></div><button class="btn" style="width:100%" onclick="saveAccount()">Створити</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="accountMoveModal" class="modal"><div class="sheet"><h2>Корекція рахунку</h2><div id="accountMoveTitle" class="muted"></div><select id="accountMoveType"><option value="add">＋ Поповнити</option><option value="remove">− Списати</option></select><input id="accountMoveAmount" type="number" step="any" placeholder="Сума"><button class="btn" style="width:100%" onclick="saveAccountMove()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="transferModal" class="modal"><div class="sheet"><h2>Переказ між рахунками</h2><select id="transferFrom"></select><select id="transferTo"></select><input id="transferAmount" type="number" step="any" placeholder="Сума"><button class="btn" style="width:100%" onclick="saveTransfer()">Переказати</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+<div id="txEditModal" class="modal"><div class="sheet"><h2>Редагувати операцію</h2>
+<input id="txEditAmount" type="number" step="any" placeholder="Сума">
+<select id="txEditAccount"></select><select id="txEditCat"></select>
+<input id="txEditNote" placeholder="Коментар"><input id="txEditDate" type="date">
+<button class="btn" style="width:100%" onclick="saveTxEdit()">Зберегти зміни</button>
+<button class="btn2 danger" style="width:100%;margin-top:8px" onclick="deleteTx()">Видалити операцію</button>
+<button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="debtModal" class="modal"><div class="sheet"><h2>Борг / штраф</h2><select id="debtType"><option>Борг</option><option>Штраф</option></select><input id="debtName" placeholder="Назва"><div style="display:flex;gap:8px"><input id="debtAmount" type="number" step="any" placeholder="Сума"><select id="debtCurrency" style="max-width:105px"><option value="UAH">₴ UAH</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option></select></div><button class="btn" style="width:100%" onclick="saveDebt()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="debtPayModal" class="modal"><div class="sheet"><h2>Внести платіж</h2><div id="debtPayTitle" class="muted"></div><input id="debtPayAmount" type="number" step="any" placeholder="Сума платежу"><button class="btn" style="width:100%" onclick="saveDebtPayment()">Зарахувати</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
 <div id="savingGoalModal" class="modal"><div class="sheet"><h2>Нова ціль</h2><input id="savingGoalName" placeholder="Назва цілі"><div style="display:flex;gap:8px"><input id="savingGoalTarget" type="number" step="any" placeholder="Ціль"><select id="savingGoalCurrency" style="max-width:105px"><option value="UAH">₴ UAH</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option></select></div><button class="btn" style="width:100%" onclick="saveSavingGoal()">Створити</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
@@ -286,7 +293,34 @@ function saveFinance(){const a=+famount.value;if(!a)return;const acc=faccount.va
 function addShop(){const v=shopInput.value.trim();if(!v)return;data.shops.unshift({n:v,q:+shopQty.value||1,d:false});shopInput.value='';shopQty.value='1';persist()}
 function addTask(){const v=taskInput.value.trim();if(!v)return;data.tasks.unshift({n:v,t:taskTime.value||'—',r:taskRepeat.value,d:false});taskInput.value='';persist()}
 function toggleShop(i){data.shops[i].d=!data.shops[i].d;persist()} function toggleTask(i){data.tasks[i].d=!data.tasks[i].d;persist()}
-function delTx(i){const x=data.tx[i];if(x){data.accounts[x.account]=(data.accounts[x.account]||0)+(x.type==='income'?-x.amount:x.amount);data.tx.splice(i,1);persist()}}
+let activeTxIndex=null;
+function txEffect(x,dir){
+ if(!x||x.type==='transfer')return;
+ if(!x.account || !(x.account in data.accounts))return;
+ const v=+x.amount||0;
+ data.accounts[x.account]=(data.accounts[x.account]||0)+(x.type==='income'?v:-v)*dir;
+}
+function openTx(i){
+ const x=data.tx[i]; if(!x||x.type==='transfer')return;
+ activeTxIndex=i;
+ txEditAmount.value=x.amount||'';
+ txEditAccount.innerHTML=Object.keys(data.accounts||{}).map(n=>`<option ${n===x.account?'selected':''}>${n}</option>`).join('');
+ txEditCat.innerHTML=Object.keys(data.categories||{}).map(n=>`<option ${n===x.cat?'selected':''}>${n}</option>`).join('');
+ txEditNote.value=x.note||'';
+ txEditDate.value=(x.date||new Date().toISOString()).slice(0,10);
+ txEditModal.classList.add('on');
+}
+function saveTxEdit(){
+ if(activeTxIndex===null)return;
+ const old=data.tx[activeTxIndex]; txEffect(old,-1);
+ const neu={...old,amount:+txEditAmount.value||0,account:txEditAccount.value,cat:txEditCat.value,note:txEditNote.value.trim()||txEditCat.value,date:txEditDate.value?new Date(txEditDate.value+'T12:00:00').toISOString():old.date};
+ data.tx[activeTxIndex]=neu; txEffect(neu,1); activeTxIndex=null; closeAll();persist();
+}
+function deleteTx(){
+ if(activeTxIndex===null)return;
+ if(!confirm('Видалити цю операцію?'))return;
+ const old=data.tx[activeTxIndex]; txEffect(old,-1); data.tx.splice(activeTxIndex,1); activeTxIndex=null;closeAll();persist();
+}
 let activeAccountName=null;
 function accCurrency(n){return data.accountCurrencies[n]||'UAH'}
 function accountCurrent(n){return +(data.accounts[n]||0)}
@@ -442,7 +476,13 @@ function render(){
 
  homeBalance.textContent=balance.textContent=money(bal);homeExpense.textContent=money(exp);homeNet.textContent=(netv>=0?'+':'')+money(netv)+' цього місяця';net.textContent=(netv>=0?'+':'')+money(netv)+' за місяць';
  
- transactions.innerHTML=data.tx.length?data.tx.slice(0,20).map((x,i)=>`<div class="row"><div><b>${x.note}</b><div class="muted">${x.cat} • ${x.account} • ${x.owner||'Особисте'}</div></div><div style="text-align:right"><b class="${x.type==='income'?'accent':''}">${x.type==='income'?'+':'−'}${money(x.amount)}</b><div class="muted" onclick="delTx(${i})">видалити</div></div></div>`).join(''):'<div class="muted" style="padding-top:12px">Операцій ще немає</div>';
+ transactions.innerHTML=data.tx.length?data.tx.slice(0,30).map((x,i)=>{
+ const d=new Date(x.date||Date.now()).toLocaleDateString('uk-UA');
+ const transfer=x.type==='transfer';
+ const acc=transfer?`${x.account||''} → ${x.toAccount||''}`:(x.account||'');
+ const sign=transfer?'⇄':(x.type==='income'?'+':'−');
+ return `<div class="row" ${transfer?'':`onclick="openTx(${i})"`}><div><b>${x.note||x.cat||'Операція'}</b><div class="muted">${x.cat||''}${acc?' • '+acc:''} • ${d}</div></div><div style="text-align:right"><b class="${x.type==='income'?'accent':''}">${sign}${money(x.amount)}</b>${transfer?'':'<div class="muted">натисни, щоб змінити</div>'}</div></div>`;
+}).join(''):'<div class="muted" style="padding-top:12px">Операцій ще немає</div>';
  shops.innerHTML=data.shops.map((x,i)=>`<div class="row ${x.d?'done':''}" onclick="toggleShop(${i})"><span>${x.d?'✓':'○'} ${x.n}</span><b>x${x.q}</b></div>`).join('');
  tasks.innerHTML=data.tasks.map((x,i)=>`<div class="row ${x.d?'done':''}" onclick="toggleTask(${i})"><div><b>${x.d?'✓':'○'} ${x.n}</b><div class="muted">${x.r}</div></div><b>${x.t}</b></div>`).join('');
  const accNames=Object.keys(data.accounts||{});
