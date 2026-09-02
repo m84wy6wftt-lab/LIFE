@@ -77,6 +77,68 @@ input,select{padding:10px;border-radius:11px}.sheet{padding:16px 14px 24px;borde
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
+window.LIFEOneSignal = null;
+window.LIFEOneSignalReady = false;
+
+function lifeOneSignalSnapshot(){
+  const os = window.LIFEOneSignal;
+  if(!os) return {ready:false, permission: Notification.permission, optedIn:false, id:null, token:null};
+  const ps = os.User.PushSubscription;
+  return {
+    ready:true,
+    permission: Notification.permission,
+    optedIn: !!ps.optedIn,
+    id: ps.id || null,
+    token: ps.token || null
+  };
+}
+
+function renderOneSignalStatus(){
+  const el=document.getElementById('pushState');
+  if(!el) return;
+  const x=lifeOneSignalSnapshot();
+  const perm=x.permission==='granted'?'✅':'❌';
+  const sub=(x.optedIn && x.id && !String(x.id).startsWith('local-'))?'✅':'❌';
+  const shortId=x.id ? String(x.id).slice(0,8)+'…'+String(x.id).slice(-6) : 'ще немає';
+  el.innerHTML='iPhone: дозвіл '+perm+'<br>OneSignal: підписка '+sub+'<br>Subscription ID: '+shortId;
+}
+
+window.OneSignalDeferred.push(async function(OneSignal) {
+  try {
+    await OneSignal.init({
+      appId: "be448e27-083e-41b3-8235-1eab1e38e977",
+      safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
+      serviceWorkerPath: "OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "/LIFE/push/" }
+    });
+    window.LIFEOneSignal=OneSignal;
+    window.LIFEOneSignalReady=true;
+
+    const reportSubscription = () => {
+      const ps=OneSignal.User.PushSubscription;
+      const id=ps.id;
+      if(id && !String(id).startsWith('local-')) localStorage.setItem('life_onesignal_subscription_id',id);
+      renderOneSignalStatus();
+    };
+    OneSignal.User.PushSubscription.addEventListener('change', reportSubscription);
+    OneSignal.Notifications.addEventListener('permissionChange', reportSubscription);
+    reportSubscription();
+
+    // If iOS permission was already granted in the previous build but OneSignal
+    // never completed the subscription, explicitly finish the opt-in now.
+    if(Notification.permission==='granted' && !OneSignal.User.PushSubscription.optedIn){
+      await OneSignal.User.PushSubscription.optIn();
+      reportSubscription();
+    }
+  } catch (err) {
+    console.error('LIFE OneSignal init error', err);
+    const el=document.getElementById('pushState');
+    if(el) el.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: помилка підключення ❌';
+  }
+});
+</script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
 window.OneSignalDeferred.push(async function(OneSignal) {
   try {
     await OneSignal.init({
@@ -265,15 +327,25 @@ function saveReminder(){
 function removeReminder(id){data.reminders=(data.reminders||[]).filter(x=>x.id!==id);persist()}
 async function requestPushPermission(){
   if(!('Notification' in window)){pushState.textContent='Цей браузер не підтримує Notifications API';return}
+  pushState.innerHTML='Підключаю OneSignal…';
   try{
-    const p=await Notification.requestPermission();updatePushState();
-    if(p==='granted') new Notification('LIFE',{body:'Сповіщення увімкнено ✅'});
-  }catch(e){pushState.textContent='Не вдалося запросити дозвіл'}
+    if(!window.LIFEOneSignal){
+      await new Promise((resolve,reject)=>{
+        let n=0; const t=setInterval(()=>{n++;if(window.LIFEOneSignal){clearInterval(t);resolve()}else if(n>30){clearInterval(t);reject(new Error('OneSignal timeout'))}},200);
+      });
+    }
+    const os=window.LIFEOneSignal;
+    if(Notification.permission!=='granted') await os.Notifications.requestPermission();
+    if(Notification.permission==='granted') await os.User.PushSubscription.optIn();
+    renderOneSignalStatus();
+  }catch(e){
+    console.error('LIFE push opt-in error',e);
+    pushState.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: не вдалося створити підписку ❌';
+  }
 }
 function updatePushState(){
   if(!('Notification' in window)){pushState.textContent='Notifications API недоступний';return}
-  const p=Notification.permission;
-  pushState.textContent=p==='granted'?'Дозвіл на сповіщення: увімкнено ✅':p==='denied'?'Сповіщення заборонені в налаштуваннях iPhone':'Потрібно дозволити сповіщення';
+  renderOneSignalStatus();
 }
 function fireLocalReminder(r){
   if(Notification.permission==='granted'){

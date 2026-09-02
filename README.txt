@@ -1,3 +1,7 @@
+LIFE v14 Push Fix
+
+OneSignal subscription fix: explicit optIn + visible iPhone/OneSignal/Subscription ID diagnostics.
+
 LIFE v12: compact UI polish, floating + positioning, and improved PWA auto-update/cache refresh.
 
 
