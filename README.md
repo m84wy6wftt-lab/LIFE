@@ -1,3 +1,3 @@
-LIFE v19.1 — Clean Start
+LIFE v20 — Accounts
 
-One-time removal of the three legacy debt entries. Reminders, Push, transactions, settings and real crypto portfolio are preserved.
+Balance starts at 0. Add your own UAH/USD/EUR accounts, set initial balances, and record top-ups/write-offs. Existing Push, crypto, debts and savings are preserved.
