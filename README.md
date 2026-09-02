@@ -1,10 +1,7 @@
-# LIFE v27 Premium
+# LIFE v28 Premium System
 
-- Premium dynamic Home
-- Today overview
-- Horizontal account cards
-- Monthly spending snapshot
-- LIFE AI preserved from v26
-- Voice Intelligence + batch actions preserved
-- Existing `LIFE_V10` data preserved
-- OneSignal background Push preserved
+Повний premium-дизайн для Головної, Фінансів, Покупок, Планів та Активів.
+
+Додано Smart Finance: обов’язкові щомісячні платежі, реально вільні гроші, бюджети категорій, компактні batch-картки LIFE AI, рахунок для всіх та Undo після AI-операцій.
+
+Збережено LIFE_V10, Push, OneSignal, Voice Intelligence та поточні дані.

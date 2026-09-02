@@ -166,14 +166,32 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 .ai-batch-card{padding:10px 11px!important;border-radius:15px!important}.ai-batch-title{font-size:13px!important;margin-bottom:5px!important}.ai-batch-card input,.ai-batch-card select{padding:8px 9px!important;margin:3px 0!important;font-size:13px}.ai-result{padding:10px!important}.ai-actions{position:sticky;bottom:-18px;background:#111419;padding:8px 0 2px;z-index:2}.ai-actions .btn{box-shadow:0 8px 25px #d8ff5f22}
 @media(max-width:380px){.hero27 .available{font-size:31px}.account27{min-width:132px}.today27 .mini-card{padding:10px}}
 </style>
-</head>
+\n<style id="v28-premium-system">
+/* LIFE v28 — one premium visual language across every section */
+#finance>.title,#shopping>.title,#plans>.title,#assets>.title{font-size:31px;letter-spacing:-.8px;margin:18px 2px 2px}
+#finance>.muted,#shopping>.muted,#plans>.muted,#assets>.muted{font-size:13px;margin:0 2px 14px;color:#89919b}
+#finance .card,#shopping .card,#plans .card,#assets .card{background:linear-gradient(145deg,#171b20,#111419);border-color:#2a3037;border-radius:20px;box-shadow:0 12px 34px #0002}
+#finance .big,#assets .big{font-size:34px;letter-spacing:-1px}
+#finance .row,#shopping .row,#plans .row,#assets .row{border-color:#252a30}
+#shopping .card:first-of-type,#plans .card:first-of-type{padding:14px}
+#shopping input,#plans input,#plans select,#finance input,#finance select,#assets input,#assets select{background:#15191e;border-color:#30363d}
+.premium-head{display:flex;align-items:end;justify-content:space-between;margin:14px 2px 9px}.premium-head h2{margin:0;font-size:30px;letter-spacing:-.8px}.premium-head small{color:var(--muted)}
+.section-hero{background:radial-gradient(circle at 90% 0,#d8ff5f13,transparent 38%),linear-gradient(145deg,#181d21,#101318)!important;border-color:#30372d!important}
+.shop-summary,.plan-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.summary-tile{background:#14181d;border:1px solid #292f36;border-radius:16px;padding:12px}.summary-tile span{display:block;color:var(--muted);font-size:11px}.summary-tile b{display:block;font-size:19px;margin-top:4px}
+.smart-pay{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #252a30}.smart-pay:last-child{border:0}.smart-pay small{display:block;color:var(--muted);margin-top:2px}.pay-due{color:#ffcf70}.pay-ok{color:var(--green)}
+.budget-grid{display:grid;gap:9px}.budget-item{padding:11px 12px;background:#12161a;border:1px solid #282e34;border-radius:15px}.budget-top{display:flex;justify-content:space-between;gap:10px;font-size:12px}.budget-item .bar{margin-top:8px}.budget-warn{color:#ffcf70}.budget-over{color:var(--red)}
+.ai-global-account{padding:10px 11px;background:#111419;border:1px solid #343b44;border-radius:15px;margin-bottom:9px}.ai-global-account label{font-size:11px;color:var(--muted)}
+.ai-batch-card{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 12px!important}.ai-batch-title{margin:0!important;color:#f5f7f8!important}.ai-batch-amount{font-size:16px;font-weight:900}.ai-batch-edit{grid-column:1/-1;display:none;padding-top:5px}.ai-batch-card.open .ai-batch-edit{display:block}.ai-batch-card.open{border-color:#4b5828}.ai-batch-card .mini{grid-column:1/-1}.undo-toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translate(-50%,20px);width:min(470px,calc(100% - 28px));background:#20252a;border:1px solid #3a424a;border-radius:16px;padding:12px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:180;opacity:0;pointer-events:none;transition:.2s}.undo-toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}.undo-toast button{border:0;background:none;color:var(--accent);font-weight:850;font-size:13px}
+.nav{background:#0f1216f2}.nav button.on b{filter:drop-shadow(0 0 8px #d8ff5f44)}
+@media(max-width:390px){#finance>.title,#shopping>.title,#plans>.title,#assets>.title{font-size:28px}.ai-batch-card{padding:10px!important}}
+</style>\n</head>
 <body>
 <main class="app">
 <div class="top"><div><div class="muted" style="font-size:11px;letter-spacing:1.8px">PERSONAL LIFE SYSTEM</div><div class="logo">LIFE<span class="accent">.</span></div></div><button class="icon" onclick="openSettings()">⚙︎</button></div>
 <div id="installBox" class="install"><b>Встановити LIFE на iPhone</b><div class="muted" style="margin-top:5px">У Safari натисни «Поділитися» → «На початковий екран».</div></div>
 
 <section id="home" class="page on">
-<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v27</span></div>
+<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v28</span></div>
 <div class="card hero27"><div class="label">Доступно зараз</div><div class="available" id="homeAvailable27">0 ₴</div><div class="hero27-grid"><div class="hero27-mini"><span>На рахунках</span><b id="homeAccounts27">0 ₴</b></div><div class="hero27-mini"><span>За місяць</span><b id="homeMonthNet27">0 ₴</b></div><div class="hero27-mini"><span>Доходи</span><b class="pos27" id="homeIncome27">+0 ₴</b></div><div class="hero27-mini"><span>Витрати</span><b class="neg27" id="homeExpense27">−0 ₴</b></div></div></div>
 <div class="section27"><b>Сьогодні</b><small id="todayLabel27"></small></div>
 <div class="today27"><div class="mini-card"><span>💸 Витрачено сьогодні</span><b id="todayExpense27">0 ₴</b></div><div class="mini-card"><span>✓ Справи</span><b id="todayTasks27">0 / 0</b></div><div class="mini-card"><span>🔔 Найближче</span><b id="todayReminder27">Немає</b></div><div class="mini-card"><span>◎ Накопичення</span><b id="todaySavings27">0 цілей</b></div></div>
@@ -195,6 +213,9 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 </div>
 
 <div class="card"><div class="muted">Баланс</div><div class="big" id="balance">0 ₴</div><div id="net" class="accent">0 ₴ за місяць</div></div>
+<div class="card section-hero"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="mini">Реально вільно</div><div class="big" id="freeMoney28">0 ₴</div></div><span class="badge" id="reserved28">−0 ₴ заплановано</span></div><div class="mini" style="margin-top:8px">Баланс рахунків мінус майбутні обов’язкові платежі цього місяця.</div></div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>Обов’язкові платежі</b><button class="btn2" onclick="openRecurring28()">＋ Додати</button></div><div id="recurring28"></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Бюджети категорій</b><span class="badge">цей місяць</span></div><div id="budgets28" class="budget-grid" style="margin-top:10px"></div></div>
 <div class="card"><div style="display:flex;justify-content:space-between"><b>Рахунки</b><span class="badge">₴ / $ / €</span></div><div id="accounts"></div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" style="flex:1" onclick="openAccount()">＋ Рахунок</button><button class="btn2" style="flex:1" onclick="openTransfer()">⇄ Переказ</button></div></div>
 <div class="grid" style="margin-top:12px"><button class="btn" onclick="openFinance('income')">＋ Дохід</button><button class="btn2" onclick="openFinance('expense')">− Витрата</button></div>
 <div class="card"><b>Операції</b><div id="transactions"></div></div>
@@ -203,18 +224,18 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 </section>
 
 <section id="shopping" class="page">
-<div class="title">Покупки</div><div class="muted">Особисті та спільні списки</div>
+<div class="title">Покупки</div><div class="muted">Швидкий список без зайвого</div><div class="shop-summary"><div class="summary-tile"><span>Залишилось купити</span><b id="shopLeft28">0</b></div><div class="summary-tile"><span>Виконано</span><b id="shopDone28" class="accent">0</b></div></div>
 
 <div class="card"><div style="display:flex;gap:8px"><input id="shopInput" placeholder="Що купити?"><input id="shopQty" value="1" style="max-width:70px" inputmode="numeric"><button class="btn" onclick="addShop()">＋</button></div><div id="shops"></div></div>
 </section>
 
 <section id="plans" class="page">
-<div class="title">Плани</div><div class="muted">Задачі, час та повторення</div>
+<div class="title">Плани</div><div class="muted">Сьогодні, наступні справи та повторення</div><div class="plan-summary"><div class="summary-tile"><span>Активні справи</span><b id="taskLeft28">0</b></div><div class="summary-tile"><span>Виконано</span><b id="taskDone28" class="accent">0</b></div></div>
 <div class="card"><input id="taskInput" placeholder="Нова задача"><div style="display:flex;gap:8px"><input id="taskTime" type="time"><select id="taskRepeat"><option>Не повторювати</option><option>Щодня</option><option>Щотижня</option><option>Щомісяця</option></select></div><button class="btn" style="width:100%" onclick="addTask()">Додати задачу</button><div id="tasks"></div></div>
 </section>
 
 <section id="assets" class="page">
-<div class="title">Активи</div><div class="muted">Криптопортфель та накопичення</div>
+<div class="title">Активи</div><div class="muted">Крипта, валюти та цілі накопичень</div>
 
 <div class="card">
   <div class="muted">Вартість портфеля</div>
@@ -264,6 +285,8 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="aiResult" class="ai-result"><div id="aiSummary" class="ai-summary"></div><div id="aiFields"></div><div class="ai-actions"><button id="aiConfirmBtn" class="btn" onclick="confirmAI()">Підтвердити</button><button class="btn2" onclick="clearAIResult()">Скасувати</button></div></div>
 <button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
 </div></div>
+<div id="recurringModal28" class="modal"><div class="sheet"><h2>Обов’язковий платіж</h2><input id="recurringName28" placeholder="Наприклад: Оренда"><input id="recurringAmount28" type="number" step="any" placeholder="Сума, ₴"><div class="muted">День місяця</div><input id="recurringDay28" type="number" min="1" max="31" value="1"><button class="btn" style="width:100%" onclick="saveRecurring28()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Скасувати</button></div></div>
+<div id="undoToast28" class="undo-toast"><span id="undoText28">✓ Збережено</span><button onclick="undoLast28()">Скасувати</button></div>
 <div id="reminderModal" class="modal"><div class="sheet">
 <h2>Нагадування</h2>
 <input id="reminderText" placeholder="Що нагадати?">
@@ -517,10 +540,12 @@ function batchFieldHTML(a,i){
  return h;
 }
 function showAIBatch(batch){
- const actions=batch.actions||[];aiSummary.textContent=batch.summary||`Знайдено дій: ${actions.length}`;
- aiFields.innerHTML=`<div class="ai-batch">${actions.map((a,i)=>`<div class="ai-batch-card"><div class="ai-batch-title">${i+1}. ${aiEsc(a.summary||a.action||'Дія')}</div>${batchFieldHTML(a,i)}</div>`).join('')}</div>`;
- const bad=actions.some(a=>!['expense','income','transfer','borrow_in','lend_out','debt_payment','saving_add','saving_remove','reminder'].includes(a.action));
- aiConfirmBtn.style.display=bad?'none':'block';aiConfirmBtn.textContent='Підтвердити все';aiResult.classList.add('show');
+ const actions=batch.actions||[],names=Object.keys(data.accounts||{});aiSummary.textContent=batch.summary||`Знайдено дій: ${actions.length}`;
+ const financeActions=actions.filter(a=>['expense','income','debt_payment','borrow_in','lend_out'].includes(a.action));
+ const global=names.length&&financeActions.length>1?`<div class="ai-global-account"><label>Рахунок для всіх</label><div style="display:flex;gap:7px"><select id="aiGlobalAccount28" style="margin:4px 0">${opts(names,names[0])}</select><button class="btn2" onclick="applyGlobalAccount28()">Застосувати</button></div></div>`:'';
+ aiFields.innerHTML=global+`<div class="ai-batch">${actions.map((a,i)=>{const amt=+a.amount||0;return `<div class="ai-batch-card" id="batchCard28_${i}" onclick="if(event.target===this||event.target.closest('.ai-batch-title,.ai-batch-amount'))toggleBatchCard28(${i})"><div class="ai-batch-title">${i+1}. ${aiEsc(a.summary||a.action||'Дія')}</div><div class="ai-batch-amount">${amt?fc(amt,a.currency||'UAH'):''}</div><div class="ai-batch-edit">${batchFieldHTML(a,i)}</div><div class="mini">Натисни, щоб змінити</div></div>`}).join('')}</div>`;
+ document.querySelectorAll('[id^="b"][id$="_account"]').forEach(x=>x.classList.add('batch-account28'));
+ const bad=actions.some(a=>!['expense','income','transfer','borrow_in','lend_out','debt_payment','saving_add','saving_remove','reminder'].includes(a.action));aiConfirmBtn.style.display=bad?'none':'block';aiConfirmBtn.textContent=`Записати ${actions.length} ${actions.length===1?'дію':'дії'}`;aiResult.classList.add('show');
 }
 function bv(i,k){return document.getElementById(`b${i}_${k}`)?.value??''}
 async function applyBatchAction(a,i){
@@ -534,13 +559,13 @@ async function applyBatchAction(a,i){
  throw new Error(`Дія ${i+1} не підтримується`);
 }
 async function confirmAIBatch(batch){
- const snapshot=JSON.stringify(data);aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю все…';
- try{for(let i=0;i<batch.actions.length;i++)await applyBatchAction(batch.actions[i],i);localStorage.setItem(KEY,JSON.stringify(data));render();aiSummary.textContent=`✅ Збережено дій: ${batch.actions.length}`;aiFields.innerHTML='';aiConfirmBtn.style.display='none';pendingAI=null}
+ const snapshot=JSON.stringify(data);undoSnapshot28=snapshot;aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю все…';
+ try{for(let i=0;i<batch.actions.length;i++)await applyBatchAction(batch.actions[i],i);localStorage.setItem(KEY,JSON.stringify(data));render();snapshotUndo28(`✓ Записано ${batch.actions.length} операції`);aiSummary.textContent=`✅ Збережено дій: ${batch.actions.length}`;aiFields.innerHTML='';aiConfirmBtn.style.display='none';pendingAI=null}
  catch(e){data=JSON.parse(snapshot);aiStatus.textContent=String(e.message||e)}finally{aiConfirmBtn.disabled=false;aiConfirmBtn.textContent='Підтвердити'}
 }
 function aiLocalISO(date,time){const d=new Date(`${date}T${time||'09:00'}:00`);if(Number.isNaN(d.getTime()))return null;return d.toISOString()}
 async function confirmAI(){
- if(!pendingAI)return;if(pendingAI.kind==='batch'){await confirmAIBatch(pendingAI);return}const a=pendingAI,action=a.action;aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю…';
+ if(!pendingAI)return;if(pendingAI.kind==='batch'){await confirmAIBatch(pendingAI);return}const a=pendingAI,action=a.action;const before28=JSON.stringify(data);aiConfirmBtn.disabled=true;aiConfirmBtn.textContent='Зберігаю…';
  try{
   if(['expense','income'].includes(action)){
    const amount=+aiAmount.value||0,account=aiAccount.value,cat=aiCategory.value;if(amount<=0)throw new Error('Вкажи суму');
@@ -556,7 +581,7 @@ async function confirmAI(){
   }else if(action==='reminder'){
    const subscriptionId=localStorage.getItem('life_onesignal_subscription_id');if(!subscriptionId)throw new Error('Спочатку увімкни Push у розділі нагадувань');const text=aiReminderText.value.trim(),date=aiDate.value,time=aiTime.value,sendAt=aiLocalISO(date,time);if(!text||!sendAt||new Date(sendAt)<=new Date())throw new Error('Дата й час мають бути в майбутньому');const r=await fetch(LIFE_PUSH_SERVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscriptionId,title:'LIFE',message:text,sendAt})});const out=await r.json();if(!r.ok||!out.ok)throw new Error(out.error||'Не вдалося запланувати Push');data.reminders=data.reminders||[];data.reminders.push({id:Date.now(),text,mode:'time',time,sendAt,enabled:true,lastFire:null,backgroundPush:true});
   }else throw new Error('Цю дію поки не підтримано');
-  localStorage.setItem(KEY,JSON.stringify(data));render();aiSummary.textContent='✅ Збережено в LIFE';aiFields.innerHTML='';aiConfirmBtn.style.display='none';pendingAI=null;
+  localStorage.setItem(KEY,JSON.stringify(data));render();undoSnapshot28=before28;snapshotUndo28('✓ Збережено в LIFE');aiSummary.textContent='✅ Збережено в LIFE';aiFields.innerHTML='';aiConfirmBtn.style.display='none';pendingAI=null;
  }catch(e){aiStatus.textContent=String(e.message||e)}finally{aiConfirmBtn.disabled=false;aiConfirmBtn.textContent='Підтвердити'}
 }
 
@@ -666,12 +691,29 @@ function importLife(file){
 function resetLife(){if(confirm('Скинути всі локальні тестові дані LIFE?')){localStorage.removeItem(KEY);location.reload()}}
 function quickAdd(){const p=document.querySelector('.page.on').id;if(p==='shopping')shopInput.focus();else if(p==='plans')taskInput.focus();else if(p==='assets')openCoin();else openFinance('expense')}
 
+
+// LIFE v28 Smart Finance + Premium System
+if(!Array.isArray(data.recurringPayments)){data.recurringPayments=[];localStorage.setItem(KEY,JSON.stringify(data));}
+let undoSnapshot28=null,undoTimer28=null;
+function snapshotUndo28(label){undoSnapshot28=JSON.stringify(data);clearTimeout(undoTimer28);undoText28.textContent=label||'✓ Збережено';undoToast28.classList.add('show');undoTimer28=setTimeout(()=>{undoToast28.classList.remove('show');undoSnapshot28=null},9000)}
+function undoLast28(){if(!undoSnapshot28)return;data=JSON.parse(undoSnapshot28);localStorage.setItem(KEY,JSON.stringify(data));undoSnapshot28=null;undoToast28.classList.remove('show');render()}
+function openRecurring28(){recurringName28.value='';recurringAmount28.value='';recurringDay28.value='1';recurringModal28.classList.add('on')}
+function saveRecurring28(){const n=recurringName28.value.trim(),a=+recurringAmount28.value||0,d=Math.max(1,Math.min(31,+recurringDay28.value||1));if(!n||a<=0)return alert('Вкажи назву та суму');snapshotUndo28('✓ Платіж додано');data.recurringPayments.push({id:Date.now(),n,amount:a,day:d,enabled:true});closeAll();persist()}
+function deleteRecurring28(id){snapshotUndo28('Платіж видалено');data.recurringPayments=data.recurringPayments.filter(x=>x.id!==id);persist()}
+function recurringReserved28(){const now=new Date(),day=now.getDate();return (data.recurringPayments||[]).filter(x=>x.enabled&&(+x.day||1)>=day).reduce((s,x)=>s+(+x.amount||0),0)}
+function renderSmart28(spent,accountsUAH){const reserved=recurringReserved28();freeMoney28.textContent=money(accountsUAH-reserved);reserved28.textContent='−'+money(reserved)+' заплановано';recurring28.innerHTML=(data.recurringPayments||[]).length?(data.recurringPayments||[]).sort((a,b)=>a.day-b.day).map(x=>`<div class="smart-pay"><div><b>${aiEsc(x.n)}</b><small>${x.day} числа щомісяця</small></div><div style="text-align:right"><b>${money(+x.amount||0)}</b><div><button class="btn2" style="padding:5px 8px;margin-top:4px" onclick="deleteRecurring28(${x.id})">×</button></div></div></div>`).join(''):'<div class="muted" style="padding-top:10px">Додай оренду, комунальні, підписки або інші регулярні платежі.</div>';
+ const items=Object.entries(data.categories||{}).filter(([n,l])=>+l>0).sort((a,b)=>(spent[b[0]]||0)/(+b[1]||1)-(spent[a[0]]||0)/(+a[1]||1));budgets28.innerHTML=items.length?items.slice(0,8).map(([n,l])=>{const v=spent[n]||0,p=Math.min(100,v/l*100),cl=v>l?'budget-over':p>=80?'budget-warn':'';return `<div class="budget-item"><div class="budget-top"><span>${aiEsc(n)}</span><b class="${cl}">${money(v)} / ${money(l)}</b></div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join(''):'<div class="muted">Ліміти ще не задані. Їх можна встановити в ⚙︎ Налаштуваннях категорій.</div>';
+ shopLeft28.textContent=(data.shops||[]).filter(x=>!x.d).length;shopDone28.textContent=(data.shops||[]).filter(x=>x.d).length;taskLeft28.textContent=(data.tasks||[]).filter(x=>!x.d).length;taskDone28.textContent=(data.tasks||[]).filter(x=>x.d).length;
+}
+function toggleBatchCard28(i){document.getElementById('batchCard28_'+i)?.classList.toggle('open')}
+function applyGlobalAccount28(){const v=document.getElementById('aiGlobalAccount28')?.value;if(!v)return;document.querySelectorAll('.batch-account28').forEach(x=>x.value=v)}
+
 function renderV27(mt,mi,me,accountsUAH,totalCrypto){
  const now=new Date(),todayKey=now.toISOString().slice(0,10);
  homeName27.textContent=data.profile.name||'Влад';
  homeDate27.textContent=now.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
  todayLabel27.textContent=now.toLocaleDateString('uk-UA',{day:'numeric',month:'short'});
- homeAvailable27.textContent=money(accountsUAH);homeAccounts27.textContent=money(accountsUAH);
+ homeAvailable27.textContent=money(accountsUAH-recurringReserved28());homeAccounts27.textContent=money(accountsUAH);
  homeIncome27.textContent='+'+money(mi);homeExpense27.textContent='−'+money(me);homeMonthNet27.textContent=(mi-me>=0?'+':'')+money(mi-me);homeMonthNet27.className=mi-me>=0?'pos27':'neg27';
  const te=(data.tx||[]).filter(x=>x.type==='expense'&&String(x.date||'').slice(0,10)===todayKey).reduce((s,x)=>s+(+x.amount||0),0);todayExpense27.textContent=money(te);
  const ts=data.tasks||[],done=ts.filter(x=>x.d).length;todayTasks27.textContent=done+' / '+ts.length;
@@ -704,7 +746,7 @@ function render(){
  tasks.innerHTML=data.tasks.map((x,i)=>`<div class="row ${x.d?'done':''}" onclick="toggleTask(${i})"><div><b>${x.d?'✓':'○'} ${x.n}</b><div class="muted">${x.r}</div></div><b>${x.t}</b></div>`).join('');
  const accNames=Object.keys(data.accounts||{});
 accounts.innerHTML=accNames.length?accNames.map(n=>{const c=accCurrency(n);return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${n}</b><div class="mini">${c}</div></div><b>${fc(accountCurrent(n),c)}</b></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openAccountMove('${n.replace(/'/g,"\\'")}')">± Змінити</button><button class="btn2 danger" onclick="deleteAccount('${n.replace(/'/g,"\\'")}')">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Рахунків ще немає — баланс 0 ₴</div>';
-const accountsUAH=accNames.reduce((s,n)=>{const v=accountCurrent(n),c=accCurrency(n);if(c==='USD')return s+v*(data.fx.usd||0);if(c==='EUR')return s+v*(data.fx.eur||0);return s+v},0);balance.textContent=money(accountsUAH);
+const accountsUAH=accNames.reduce((s,n)=>{const v=accountCurrent(n),c=accCurrency(n);if(c==='USD')return s+v*(data.fx.usd||0);if(c==='EUR')return s+v*(data.fx.eur||0);return s+v},0);balance.textContent=money(accountsUAH);renderSmart28(spent,accountsUAH);
 debts.innerHTML=(data.debts||[]).length?data.debts.map(d=>{if(!d.id)d.id=Date.now()+Math.floor(Math.random()*9999);d.currency=d.currency||'UAH';d.original=+d.original||+d.a||0;d.payments=d.payments||[];const p=paid(d),r=remain(d),pc=d.original?Math.min(100,p/d.original*100):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${d.type||'Борг'}: ${d.n}</b><div class="mini">Сплачено ${fc(p,d.currency)}</div></div><b>${fc(r,d.currency)}</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openDebtPayment(${d.id})">＋ Платіж</button><button class="btn2 danger" onclick="deleteDebt(${d.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Поки немає боргів або записів «Мені винні»</div>';
 const gs=data.savingGoals||[];savingGoals.innerHTML=gs.length?gs.map(g=>{const c=sc(g),pc=g.target?Math.min(100,Math.max(0,c/g.target*100)):0;return `<div style="padding:10px 0;border-bottom:1px solid #22272e"><div style="display:flex;justify-content:space-between"><div><b>${g.n}</b><div class="mini">${fc(c,g.currency)} / ${fc(g.target,g.currency)}</div></div><b>${Math.round(pc)}%</b></div><div class="bar" style="margin-top:7px"><i style="width:${pc}%"></i></div><div style="display:flex;gap:7px;margin-top:8px"><button class="btn2" onclick="openSavingMove(${g.id})">± Змінити</button><button class="btn2 danger" onclick="deleteSavingGoal(${g.id})">Видалити</button></div></div>`}).join(''):'<div class="muted" style="padding-top:10px">Цілей ще немає</div>';assetSavingGoals.innerHTML=gs.length?gs.map(g=>`<div class="row"><span>${g.n}</span><b>${fc(sc(g),g.currency)}</b></div>`).join(''):'Цілей ще немає';
  const vals=Object.entries(data.coins).map(([n,v])=>[n,v.q*v.p,v]); const total=vals.reduce((s,x)=>s+x[1],0); assetTotal.textContent=cryptoTotal.textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:2});

@@ -1,3 +1,2 @@
-LIFE v27 Premium
-Новий динамічний Home, компактний LIFE AI, рахунки, Today, місячний огляд.
-Зберігає LIFE_V10, Push, Voice Intelligence v26 та всі поточні дані.
+LIFE v28 Premium System
+7 files for GitHub Pages. Cloudflare Worker v26 remains unchanged. Existing LIFE_V10 data is preserved.
