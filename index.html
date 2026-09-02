@@ -108,7 +108,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "be448e27-083e-41b3-8235-1eab1e38e977",
       safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
-      serviceWorkerPath: "OneSignalSDKWorker.js",
+      serviceWorkerPath: "LIFE/OneSignalSDKWorker.js",
       serviceWorkerParam: { scope: "/LIFE/push/" }
     });
     window.LIFEOneSignal=OneSignal;
@@ -137,42 +137,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
   }
 });
 </script>
-<script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-window.OneSignalDeferred.push(async function(OneSignal) {
-  try {
-    await OneSignal.init({
-      appId: "be448e27-083e-41b3-8235-1eab1e38e977",
-      safari_web_id: "web.onesignal.auto.002ea938-3ebd-4740-ada1-6c17c5eb4600",
-      serviceWorkerPath: "OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/LIFE/push/" }
-    });
 
-    const verifyKey = "life_onesignal_verify_v13";
-    if (!localStorage.getItem(verifyKey)) {
-      localStorage.setItem(verifyKey, "shown");
-      setTimeout(async () => {
-        const ok = window.confirm(
-          "OneSignal підключено до LIFE!\n\nНатисни OK, щоб дозволити справжні push-повідомлення на iPhone."
-        );
-        if (ok) await OneSignal.Notifications.requestPermission();
-      }, 700);
-    }
-
-    const reportSubscription = () => {
-      const id = OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.id;
-      if (id) {
-        console.log("LIFE OneSignal push subscription registered:", id);
-        localStorage.setItem("life_onesignal_subscription_id", id);
-      }
-    };
-    OneSignal.User.PushSubscription.addEventListener("change", reportSubscription);
-    reportSubscription();
-  } catch (err) {
-    console.error("LIFE OneSignal init error", err);
-  }
-});
-</script>
 
 </head>
 <body>
@@ -340,7 +305,7 @@ async function requestPushPermission(){
     renderOneSignalStatus();
   }catch(e){
     console.error('LIFE push opt-in error',e);
-    pushState.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: не вдалося створити підписку ❌';
+    pushState.innerHTML='iPhone: дозвіл '+(Notification.permission==='granted'?'✅':'❌')+'<br>OneSignal: помилка ❌<br><span style="font-size:13px">'+String(e && (e.message||e)).slice(0,180)+'</span>';
   }
 }
 function updatePushState(){
