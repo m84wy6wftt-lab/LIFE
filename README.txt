@@ -1,2 +1,6 @@
-LIFE v32.1 — Polish Fix
-Reminders edit/AI context, savings target AI, crypto edit/delete rollback, compact Plans, budget/payment progress.
+LIFE v32.2 — Crypto Fix + Polish
+
+- Crypto base position separated from buy/sell ledger
+- Edit/delete rebuilds portfolio safely
+- Repairs known ADA test artifact from v32.1
+- Preserves LIFE_V10 and existing data
