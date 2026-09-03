@@ -1,6 +1,5 @@
-LIFE v32.2 — Crypto Fix + Polish
+LIFE v32.3 — AI Edit Fix
 
-- Crypto base position separated from buy/sell ledger
-- Edit/delete rebuilds portfolio safely
-- Repairs known ADA test artifact from v32.1
-- Preserves LIFE_V10 and existing data
+Основа: v32.2 Crypto Fix + Polish.
+Додано повну підтримку AI для saving_set, reminder_update та reminder_delete, включно з batch-командами.
+Збережено LIFE_V10, крипто-виправлення, Push, Voice та фінансову логіку.
