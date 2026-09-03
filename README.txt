@@ -1,2 +1,2 @@
-# LIFE v31.1 — Reminders Center
-Плани → Справи / Нагадування. Ручні Push, список майбутніх нагадувань, Push для справ та серверне скасування нових запланованих Push.
+LIFE v32 — Polish
+Smart Plans with dates, deep finance editing, safer undo/cancel flows, shopping editing, reminders preserved.
