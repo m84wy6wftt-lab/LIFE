@@ -28,6 +28,7 @@ button,input,select{font:inherit}.app{max-width:520px;margin:auto;min-height:100
 .page{display:none}.page.on{display:block}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick button{min-height:74px;text-align:left}
 input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e;background:#1a1e23;color:white;margin:5px 0}
 .modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;align-items:flex-end}.modal.on{display:flex}.sheet{width:min(520px,100%);margin:auto;background:#111419;border-radius:26px 26px 0 0;padding:20px 16px 30px;max-height:90vh;overflow:auto}
+#settingsModal{overflow:hidden;touch-action:pan-y}#settingsModal .sheet{width:100%;max-width:520px;max-height:100dvh;height:100dvh;margin:0 auto;border-radius:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;position:relative;padding-top:calc(72px + env(safe-area-inset-top))}#settingsModal .settings-head3401{position:fixed;z-index:5;top:0;left:50%;transform:translateX(-50%);width:min(520px,100vw);height:calc(58px + env(safe-area-inset-top));padding:calc(10px + env(safe-area-inset-top)) 14px 8px;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}#settingsModal .settings-head3401 h2{margin:0;font-size:21px}#settingsModal .settings-close3401{width:40px;height:40px;border-radius:13px;border:1px solid var(--line);background:var(--soft);color:var(--text);font-size:22px;font-weight:800;display:grid;place-items:center;padding:0}#settingsModal .card,#settingsModal input,#settingsModal select,#settingsModal button{max-width:100%}html,body{max-width:100%;overflow-x:hidden}
 .fab{position:fixed;right:max(18px,calc((100vw - 520px)/2 + 18px));bottom:96px;width:58px;height:58px;border-radius:18px;font-size:27px;z-index:30}
 .progress{height:8px;background:#292e34;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--accent)}
 .done{opacity:.45;text-decoration:line-through}.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;border:1px solid #30363e;background:#171a1f;color:#c8cdd3;border-radius:999px;padding:8px 11px}.chip.on{border-color:var(--accent);color:var(--accent)}
@@ -219,7 +220,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="installBox" class="install"><b>Встановити LIFE на iPhone</b><div class="muted" style="margin-top:5px">У Safari натисни «Поділитися» → «На початковий екран».</div></div>
 
 <section id="home" class="page on">
-<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v34</span></div>
+<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v34.0.1</span></div>
 <div class="card hero27"><div class="label">Доступно зараз</div><div class="available" id="homeAvailable27">0 ₴</div><div class="hero27-grid"><div class="hero27-mini"><span>На рахунках</span><b id="homeAccounts27">0 ₴</b></div><div class="hero27-mini"><span>За місяць</span><b id="homeMonthNet27">0 ₴</b></div><div class="hero27-mini"><span>Доходи</span><b class="pos27" id="homeIncome27">+0 ₴</b></div><div class="hero27-mini"><span>Витрати</span><b class="neg27" id="homeExpense27">−0 ₴</b></div></div></div>
 <div class="section27"><b>Сьогодні</b><small id="todayLabel27"></small></div>
 <div class="today27"><div class="mini-card"><span>💸 Витрачено сьогодні</span><b id="todayExpense27">0 ₴</b></div><div class="mini-card"><span>✓ Справи</span><b id="todayTasks27">0 / 0</b></div><div class="mini-card"><span>🔔 Найближче</span><b id="todayReminder27">Немає</b></div><div class="mini-card"><span>◎ Накопичення</span><b id="todaySavings27">0 цілей</b></div></div>
@@ -326,7 +327,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div class="muted" id="pushState" style="margin-top:10px"></div>
 <button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button>
 </div></div>
-<div id="settingsModal" class="modal"><div class="sheet"><h2>Налаштування</h2><input id="nameInput" placeholder="Твоє ім'я"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
+<div id="settingsModal" class="modal"><div class="sheet"><div class="settings-head3401"><h2>Налаштування</h2><button type="button" class="settings-close3401" aria-label="Закрити налаштування" onclick="closeAll()">×</button></div><input id="nameInput" placeholder="Твоє ім'я"><select id="currencyInput"><option>UAH</option><option>USD</option><option>EUR</option></select>
 <div class="card"><b>Вигляд LIFE</b><div class="muted" style="margin:5px 0 8px">Обери темну тему. Вона збережеться на цьому пристрої.</div><div id="themeGrid34" class="theme-grid34"></div></div>
 <div class="card"><b>Категорії та підкатегорії</b><div class="muted" style="margin:5px 0 10px">Можна додавати, перейменовувати, приховувати та видаляти. Формат підкатегорії: «Авто › Пальне».</div><div id="categorySettings"></div>
 <div style="display:flex;gap:8px;margin-top:10px"><input id="newCategoryName" placeholder="Нова категорія"><input id="newCategoryLimit" type="number" placeholder="Ліміт" style="max-width:110px"><button class="btn" onclick="addCategory()">＋</button></div>
@@ -337,7 +338,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div class="grid"><button class="btn2" onclick="exportLife()">Експорт</button><button class="btn2" onclick="document.getElementById('importFile').click()">Імпорт</button></div>
 <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importLife(this.files[0])">
 <button class="btn2 danger" style="width:100%;margin-top:10px" onclick="resetLife()">Скинути тестові дані</button>
-</div><button class="btn" style="width:100%" onclick="saveSettings()">Зберегти</button><button class="btn2" style="width:100%;margin-top:8px" onclick="closeAll()">Закрити</button></div></div>
+</div><button class="btn" style="width:100%" onclick="saveSettings()">Зберегти</button></div></div>
 
 <script>
 const KEY='LIFE_V10';
