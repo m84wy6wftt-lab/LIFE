@@ -1,3 +1,5 @@
+LIFE v34 — Intelligence + Themes
+
 LIFE v33.1.1 — Intelligence / AI 2.0
 
 Основа: стабільна v32.3.2.
