@@ -36,7 +36,7 @@ input,select{width:100%;padding:12px;border-radius:13px;border:1px solid #30363e
 .stat{font-size:13px}.split{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.split .card{margin:0;padding:12px}
 .install{display:none;background:#1a1e23;border:1px solid #323841;padding:12px;border-radius:16px;margin:12px 0}.install.show{display:block}
 
-/* LIFE v34.2 Intelligence Plus */
+/* LIFE v34.3 Intelligence Plus */
 .premium-hero{background:linear-gradient(145deg,#1b211b,#12161a)!important;border-color:#35402d!important}.premium-kicker{color:#9aa2ab;font-size:12px;margin-bottom:5px}.premium-number{font-size:42px;font-weight:900;letter-spacing:-1.8px;line-height:1}.premium-sub{color:#929aa4;font-size:12px;margin-top:7px}.plan-next{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid #293029}.plan-next .time{font-size:26px;font-weight:900;color:var(--accent)}
 .plan-composer{display:grid;grid-template-columns:1fr 110px;gap:8px}.plan-composer .wide{grid-column:1/-1}.premium-list{display:grid;gap:9px;margin-top:10px}.plan-item28{display:flex;align-items:center;gap:11px;background:#12161a;border:1px solid #282e34;border-radius:17px;padding:13px}.plan-item28.done{opacity:.5}.plan-check28{width:30px;height:30px;border-radius:50%;border:1px solid #424a52;display:grid;place-items:center;flex:0 0 auto;font-weight:900}.plan-item28.done .plan-check28{background:var(--accent);color:#0a0c0e;border-color:var(--accent)}.plan-copy28{min-width:0;flex:1}.plan-copy28 b{display:block;font-size:15px}.plan-copy28 small{display:block;color:var(--muted);margin-top:3px}.plan-time28{font-size:16px;font-weight:850}
 .asset-hero28{background:radial-gradient(circle at 85% 10%,#d5ff5320,transparent 34%),linear-gradient(145deg,#191e1a,#111419)!important;border-color:#35402d!important}.asset-total28{font-size:44px;font-weight:950;letter-spacing:-2px;margin:5px 0}.asset-stats28{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.asset-stat28{padding:11px 12px;background:#111519;border:1px solid #293039;border-radius:15px}.asset-stat28 span{display:block;color:var(--muted);font-size:11px}.asset-stat28 b{display:block;margin-top:4px;font-size:16px}.coin-grid28{display:grid;gap:9px;margin-top:11px}.coin-card28{background:#12161a;border:1px solid #282e34;border-radius:18px;padding:13px}.coin-head28,.coin-foot28{display:flex;justify-content:space-between;align-items:center;gap:10px}.coin-symbol28{display:flex;align-items:center;gap:9px}.coin-icon28{width:34px;height:34px;border-radius:12px;background:#1d2328;border:1px solid #343b42;display:grid;place-items:center;font-size:12px;font-weight:950;color:var(--accent)}.coin-value28{text-align:right}.coin-value28 b{display:block;font-size:16px}.coin-value28 small,.coin-foot28{color:var(--muted);font-size:11px}.coin-foot28{margin-top:11px;padding-top:10px;border-top:1px solid #242a30}.pl-pos28{color:#76f59a!important}.pl-neg28{color:#ff777d!important}.fx-strip28{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.fx28{background:#12161a;border:1px solid #282e34;border-radius:15px;padding:10px;text-align:center}.fx28 span{display:block;color:var(--muted);font-size:10px}.fx28 b{display:block;font-size:13px;margin-top:4px}.premium-section-head{display:flex;justify-content:space-between;align-items:end;margin:18px 2px 8px}.premium-section-head b{font-size:19px}.premium-section-head small{color:var(--muted)}
@@ -64,6 +64,13 @@ html[data-theme="neonrose"] .todayCard{background:linear-gradient(145deg,rgba(25
 html[data-theme="neonrose"] .nav .active,html[data-theme="neonrose"] .accent{color:var(--accent)!important}
 html[data-theme="neonrose"] .progress>i,html[data-theme="neonrose"] .bar>i{background:linear-gradient(90deg,#ff4fb3,#ff78c7)!important}
 html[data-theme="neonrose"] input:focus,html[data-theme="neonrose"] select:focus,html[data-theme="neonrose"] textarea:focus{border-color:rgba(255,79,179,.62)!important;box-shadow:0 0 0 3px rgba(255,79,179,.08)}
+
+html[data-theme-mode="full"] body{background:radial-gradient(900px 520px at 100% -10%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 58%),radial-gradient(720px 480px at -12% 42%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 60%),var(--bg)}
+html[data-theme-mode="full"] .card,html[data-theme-mode="full"] .hero,html[data-theme-mode="full"] .todayCard,html[data-theme-mode="full"] .accountCard{border-color:color-mix(in srgb,var(--accent) 24%,transparent)!important}
+html[data-theme-mode="full"] .hero{background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 10%,transparent),var(--card) 52%,var(--bg))!important}
+html[data-theme-mode="full"] .progress>i,html[data-theme-mode="full"] .bar>i{background:var(--accent)!important}
+.plan-compact-343{padding:11px 12px!important;margin:7px 0!important}
+.plan-reminder-343{min-width:38px!important;width:38px!important;height:38px!important;padding:0!important;border-radius:12px!important}
 </style>
 <style>
 .bar{height:8px;background:#292e34;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
@@ -229,7 +236,7 @@ window.OneSignalDeferred.push(async function(OneSignal) {
 <div id="installBox" class="install"><b>Встановити LIFE на iPhone</b><div class="muted" style="margin-top:5px">У Safari натисни «Поділитися» → «На початковий екран».</div></div>
 
 <section id="home" class="page on">
-<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v34.2</span></div>
+<div class="home27-head"><div><h1>Привіт, <span id="homeName27">Влад</span> 👋</h1><div class="home27-date" id="homeDate27"></div></div><span class="badge">LIFE v34.3</span></div>
 <div class="card hero27"><div class="label">Доступно зараз</div><div class="available" id="homeAvailable27">0 ₴</div><div class="hero27-grid"><div class="hero27-mini"><span>На рахунках</span><b id="homeAccounts27">0 ₴</b></div><div class="hero27-mini"><span>За місяць</span><b id="homeMonthNet27">0 ₴</b></div><div class="hero27-mini"><span>Доходи</span><b class="pos27" id="homeIncome27">+0 ₴</b></div><div class="hero27-mini"><span>Витрати</span><b class="neg27" id="homeExpense27">−0 ₴</b></div></div></div>
 <div class="section27"><b>Сьогодні</b><small id="todayLabel27"></small></div>
 <div class="today27"><div class="mini-card"><span>💸 Витрачено сьогодні</span><b id="todayExpense27">0 ₴</b></div><div class="mini-card"><span>✓ Справи</span><b id="todayTasks27">0 / 0</b></div><div class="mini-card"><span>🔔 Найближче</span><b id="todayReminder27">Немає</b></div><div class="mini-card"><span>◎ Накопичення</span><b id="todaySavings27">0 цілей</b></div></div>
@@ -1091,5 +1098,43 @@ function polishHome342(){
   if(info.name){if(!sub){sub=document.createElement('div');sub.className='mini nearest342';sub.style.marginTop='4px';card.appendChild(sub)}sub.textContent=info.name}else if(sub)sub.remove();
  }
 }
+
+function applyThemeMode343(m){m=m==='full'?'full':'premium';document.documentElement.dataset.themeMode=m;localStorage.setItem('LIFE_THEME_MODE',m);if(data&&data.ui)data.ui.themeMode=m;try{save()}catch(e){}}
+function initThemeMode343(){document.documentElement.dataset.themeMode=(data&&data.ui&&data.ui.themeMode)||localStorage.getItem('LIFE_THEME_MODE')||'premium'}
+initThemeMode343();
+function injectThemeMode343(){
+ const a=[...document.querySelectorAll('*')].find(e=>e.children.length===0&&(e.textContent||'').trim()==='Вигляд LIFE');if(!a)return;
+ const h=a.closest('.card,.section')||a.parentElement;if(!h||h.querySelector('.theme-mode-343'))return;
+ const b=document.createElement('div');b.className='theme-mode-343';b.style.marginTop='14px';
+ b.innerHTML='<div class="mini" style="margin-bottom:8px">Стиль теми</div><div class="seg" style="display:grid;grid-template-columns:1fr 1fr"><button type="button" data-m="premium">Premium</button><button type="button" data-m="full">Full</button></div><div class="mini" style="margin-top:7px">Premium — акценти · Full — повнокольоровий LIFE</div>';
+ h.appendChild(b);const r=()=>b.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.m===document.documentElement.dataset.themeMode));
+ b.querySelectorAll('button').forEach(x=>x.onclick=()=>{applyThemeMode343(x.dataset.m);r()});r();
+}
+function rts343(r){if(!r||r.enabled===false)return NaN;let x=r.sendAt||r.when||r.dateTime||r.datetime;if(x){let n=new Date(x).getTime();if(Number.isFinite(n))return n}if(r.date&&r.time){let n=new Date(r.date+'T'+r.time).getTime();if(Number.isFinite(n))return n}return NaN}
+function patchNearest343(){
+ const l=[...document.querySelectorAll('*')].find(e=>e.children.length===0&&/Найближче/.test((e.textContent||'').trim()));if(!l)return;
+ const c=l.closest('.todayCard,.card')||l.parentElement,x=(data.reminders||[]).map(r=>({r,ts:rts343(r)})).filter(x=>Number.isFinite(x.ts)&&x.ts>Date.now()).sort((a,b)=>a.ts-b.ts)[0];
+ const v=[...c.querySelectorAll('b,strong,.big,.value,h3,h4')].filter(e=>e!==l)[0];l.textContent='🔔 Найближче';
+ let sub=c.querySelector('.nearest-name-343');if(!x){if(v)v.textContent='Немає';if(sub)sub.remove();return}
+ const d=new Date(x.ts),n=new Date(),tm=d.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'}),tom=new Date(n);tom.setDate(n.getDate()+1);
+ if(v)v.textContent=d.toDateString()===n.toDateString()?tm:(d.toDateString()===tom.toDateString()?'Завтра · '+tm:d.toLocaleDateString('uk-UA',{day:'numeric',month:'short'})+' · '+tm);
+ if(!sub){sub=document.createElement('div');sub.className='mini nearest-name-343';sub.style.marginTop='3px';c.appendChild(sub)}sub.textContent=x.r.title||x.r.text||x.r.name||x.r.note||'Нагадування';
+}
+function prefill343(p){const i=[...document.querySelectorAll('input,textarea')].find(x=>/назв|текст|нагад|що/i.test((x.placeholder||'')+' '+(x.name||'')));if(i&&!i.value)i.value=p.title||p.text||p.name||''}
+function planBell343(p){
+ const linked=(data.reminders||[]).find(r=>r.planId===p.id||r.taskId===p.id);
+ if(linked&&typeof editReminder==='function')return editReminder(linked.id);
+ if(typeof addReminder==='function'){addReminder();setTimeout(()=>prefill343(p),80);return}
+ if(typeof openReminder==='function'){openReminder();setTimeout(()=>prefill343(p),80);return}
+ alert('Встанови нагадування для цієї задачі у центрі нагадувань.');
+}
+function enhancePlans343(){
+ (data.plans||[]).forEach(p=>{const t=String(p.title||p.text||p.name||'').trim();if(!t)return;
+ const n=[...document.querySelectorAll('.card,.plan,.task,.item')].find(e=>!e.dataset.bell343&&(e.textContent||'').includes(t));if(!n)return;
+ n.dataset.bell343='1';n.classList.add('plan-compact-343');const b=document.createElement('button');b.type='button';b.className='btn2 plan-reminder-343';b.textContent='🔔';b.onclick=e=>{e.stopPropagation();planBell343(p)};n.appendChild(b);
+ })}
+function patchMonth343(){const b=[...document.querySelectorAll('*')].find(e=>e.children.length===0&&(e.textContent||'').trim()==='Баланс');if(!b)return;const c=b.closest('.card')||b.parentElement;const m=[...c.querySelectorAll('*')].find(e=>e.children.length===0&&/за місяць/i.test(e.textContent||''));if(m)m.textContent=m.textContent.replace(/за місяць/i,'· результат місяця')}
+function polish343(){injectThemeMode343();patchNearest343();enhancePlans343();patchMonth343()}
+setInterval(polish343,1200);setTimeout(polish343,150);
 </script>
 </body></html>
