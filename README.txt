@@ -1,11 +1,9 @@
-LIFE v34.4.1 — Premium / Full Themes
-Built directly on stable v34.4.
-
-- Restores Premium / Full theme mode.
-- Works with every existing theme: Graphite, Obsidian, Midnight, Titanium, Forest, OLED, Neon Rose.
-- Premium keeps the restrained dark/accent look.
-- Full spreads each theme accent across background atmosphere, cards, borders, navigation and progress.
-- Plans v34.4 left untouched.
-- Reminder/Push logic left untouched.
-- LIFE_V10 preserved.
-- Cloudflare Worker unchanged.
+LIFE v34.5 — Completion Pack
+- Operations: 2 latest + Show all / Collapse
+- Clear month-result wording
+- Home tasks: done of total
+- Budget remaining + pace forecast
+- Debt Planner scenario presets: Comfort / Fast / Maximum
+- v34.4 Plans preserved
+- v34.4.1 Premium / Full themes preserved
+- LIFE_V10 preserved; Worker unchanged
