@@ -1,11 +1,11 @@
-LIFE v34.4 — Clean Plans Fix
-Built cleanly from stable v34.2, not from v34.3/v34.3.1.
+LIFE v34.4.1 — Premium / Full Themes
+Built directly on stable v34.4.
 
-- Plans redesigned in the actual HTML/render logic (no DOM layout hacks).
-- Compact task-first Plans screen.
-- Each task has its own reminder button.
-- Task reminder reuses existing OneSignal/Cloudflare scheduling and links to the task.
-- Separate reminders remain available through a compact service button.
-- Home "Найближче" now filters the real reminder list to future sendAt values in the actual render logic.
+- Restores Premium / Full theme mode.
+- Works with every existing theme: Graphite, Obsidian, Midnight, Titanium, Forest, OLED, Neon Rose.
+- Premium keeps the restrained dark/accent look.
+- Full spreads each theme accent across background atmosphere, cards, borders, navigation and progress.
+- Plans v34.4 left untouched.
+- Reminder/Push logic left untouched.
 - LIFE_V10 preserved.
 - Cloudflare Worker unchanged.
